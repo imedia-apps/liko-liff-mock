@@ -233,7 +233,7 @@ body{
       <div class="rev"><span class="num">1</span><div>Googleマップで店舗を検索</div></div>
       <div class="rev"><span class="num">2</span><div>お星さまを選ぶ<div class="stars">★★★★★</div></div></div>
       <div class="rev"><span class="num">3</span><div>レビューを書いて投稿</div></div>
-      <div class="cta spacer" onclick="state.reviewed=true;toast('Googleマップ（店舗ページ）へ移動します（デモ）');setTimeout(()=>go('register'),900)">口コミを書きにいく</div>
+      <div class="cta spacer" onclick="reviewGo()">口コミを書きにいく</div>
       <div class="cta ghost" onclick="state.reviewed=false;go('register')">そのまま会計へ進む</div>
     </div>
   </section>
@@ -293,11 +293,13 @@ const ACTIVITIES = [
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
 
 const STORES = [
-  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","ring","beads","glasses","perfume"]},
+  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","ring","beads","glasses","perfume"],
+   gmap:"https://www.google.com/maps/search/?api=1&query=Liko+大阪心斎橋店"},
   {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"], nakazakiNote:true},
   {name:"中崎町",           area:"大阪", staff:"always",  offers:["snake","flower"], walk:"予約不要"},
   {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["snake","flower"]},
-  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["snake","flower"]},
+  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["snake","flower"],
+   gmap:"https://www.google.com/maps/search/?api=1&query=キャンバスアートリコ+心斎橋アメ村店"},
   {name:"西天満",           area:"大阪", staff:"none",    offers:["snake","flower"], noCash:true},
   {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"]},
   {name:"京都",             area:"京都", staff:"always",  offers:["flower","art","chain"]},
@@ -527,6 +529,19 @@ function guideNext(){
 function guidePrev(){
   if(state.guideStep>0){ state.guideStep--; renderGuide(); }
   else{ back(); }
+}
+
+/* ====== 口コミ誘導：gmap がある店舗（心斎橋エリア）は本物のGoogleマップへ、無い店舗はデモ表示 ====== */
+function reviewGo(){
+  state.reviewed = true;
+  if(state.store && state.store.gmap){
+    window.open(state.store.gmap, '_blank');
+    toast('Googleマップを開きました。書き終えたらこの画面に戻って会計へ♪');
+    setTimeout(()=>go('register'), 1400);
+  }else{
+    toast('Googleマップ（店舗ページ）へ移動します（デモ）');
+    setTimeout(()=>go('register'), 900);
+  }
 }
 
 /* ====== セルフレジ ====== */
