@@ -75,13 +75,15 @@ body.only .step:not(.show){display:none}
 body.only .step .lbl{display:none}
 body.only .step{width:auto;padding:18px}
 
-/* app mode（?app=1）：1画面ずつタップで進める */
-body.app{padding:0;display:flex;align-items:center;justify-content:center;min-height:100vh}
+/* app mode（デフォルト）：スマホフレーム無し・実機の画面いっぱいに表示して1画面ずつタップで進める */
+body.app{padding:0;margin:0;height:100dvh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--scr)}
 body.app .flow-title{display:none}
 body.app .flow{gap:0}
 body.app .step:not(.show){display:none}
 body.app .step .lbl{display:none}
-body.app .step{width:auto;padding:18px}
+body.app .step{width:282px;padding:0;transform:scale(var(--app-scale,1));transform-origin:center center}
+body.app .lk-phone{background:none;border-radius:0;padding:0;box-shadow:none}
+body.app .lk-scr{border-radius:0}
 body.app .lk-card,body.app .lk-plan,body.app .lk-cta,body.app .lk-back{cursor:pointer}
 body.app .lk-card:active,body.app .lk-plan:active,body.app .lk-cta:active{opacity:.75}
 body.app{-webkit-user-select:none;user-select:none}
@@ -286,6 +288,10 @@ body.app{-webkit-user-select:none;user-select:none}
 
   if(appMode){
     document.body.classList.add('app');
+    // 実機の画面サイズに合わせて等倍拡大（デザインは282x566基準）
+    const fit = () => document.documentElement.style.setProperty('--app-scale',
+      Math.min(window.innerWidth/282, window.innerHeight/566));
+    window.addEventListener('resize', fit); fit();
     const q = (s, sel) => document.querySelector('.step[data-s="'+s+'"] '+sel);
     const qa = (s, sel) => document.querySelectorAll('.step[data-s="'+s+'"] '+sel);
     // 各画面のボタン → 次の画面へ
