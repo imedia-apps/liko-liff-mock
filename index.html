@@ -225,31 +225,7 @@ body{
     <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>作り方で困ったら質問</div>
   </section>
 
-  <!-- 7. セルフレジ -->
-  <section class="screen" data-scr="register">
-    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お会計</span></div>
-    <div class="body">
-      <div class="cap" style="text-align:center">お支払いいただける方法</div>
-      <div class="pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i></div>
-      <div class="cap" style="text-align:center" id="regPay">現金・クレジット・PayPay</div>
-      <div class="photo" style="height:130px;margin-top:6px"><i class="ti ti-cash-register"></i>セルフレジへお進みください</div>
-      <div class="cta spacer" onclick="go('photo')">支払いを完了する</div>
-    </div>
-  </section>
-
-  <!-- 8. 写真アップロード -->
-  <section class="screen" data-scr="photo">
-    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">完成品のお写真</span></div>
-    <div class="body">
-      <div class="center" style="flex:none;margin-top:8px"><div class="circle"><i class="ti ti-camera"></i></div>
-        <div class="sub">完成品のお写真を<br>撮らせてください</div></div>
-      <div class="photo" style="height:150px;cursor:pointer" onclick="toast('写真を選択しました（デモ）')"><i class="ti ti-upload"></i>写真をアップロード</div>
-      <div class="cap" style="text-align:center">※ SNS掲載の可否を確認します</div>
-      <div class="cta spacer" onclick="go('review')">次へ進む</div>
-    </div>
-  </section>
-
-  <!-- 9. Googleレビュー -->
+  <!-- 7. Googleレビュー（会計前。2026-07-08打ち合わせ：写真アップ廃止・口コミ誘導は会計前に） -->
   <section class="screen" data-scr="review">
     <div class="hdr"><i class="ti ti-brand-google back" style="color:#9A8167"></i><span class="ttl">レビューのご協力</span></div>
     <div class="body">
@@ -257,21 +233,28 @@ body{
       <div class="rev"><span class="num">1</span><div>Googleマップで店舗を検索</div></div>
       <div class="rev"><span class="num">2</span><div>お星さまを選ぶ<div class="stars">★★★★★</div></div></div>
       <div class="rev"><span class="num">3</span><div>レビューを書いて投稿</div></div>
-      <div class="cta spacer" onclick="toast('Googleレビューへ移動します（デモ）');setTimeout(()=>go('flower'),700)">レビューを書きにいく</div>
-      <div class="cta ghost" onclick="go('flower')">今回は書かない</div>
+      <div class="cta spacer" onclick="state.reviewed=true;toast('Googleマップ（店舗ページ）へ移動します（デモ）');setTimeout(()=>go('register'),900)">口コミを書きにいく</div>
+      <div class="cta ghost" onclick="state.reviewed=false;go('register')">そのまま会計へ進む</div>
     </div>
   </section>
 
-  <!-- 10. お花プレゼント -->
-  <section class="screen" data-scr="flower">
+  <!-- 8. セルフレジ（お会計） -->
+  <section class="screen" data-scr="register">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お会計</span></div>
     <div class="body">
-      <div class="center">
-        <div class="circle" style="color:var(--pink)"><i class="ti ti-flower"></i></div>
-        <div class="sub">お花を1本プレゼントしました</div>
-        <div class="cap">スタッフへこの画面をお見せください<br>本日はありがとうございました ♡</div>
-        <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>
-      </div>
-      <div class="cta spacer" onclick="restart()">最初にもどる</div>
+      <div class="cap" style="text-align:center">お支払いいただける方法</div>
+      <div class="pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i><i class="ti ti-building-store"></i></div>
+      <div class="cap" style="text-align:center" id="regPay">現金・カード・PayPay・コンビニ払い</div>
+      <div class="photo" style="height:130px;margin-top:6px"><i class="ti ti-cash-register"></i>セルフレジへお進みください</div>
+      <div class="cta spacer" onclick="go('done')">支払いを完了する</div>
+    </div>
+  </section>
+
+  <!-- 9. 完了（退店可能） -->
+  <section class="screen" data-scr="done">
+    <div class="body">
+      <div class="center" id="doneBody"></div>
+      <div class="cta spacer" onclick="restart()">終了する</div>
     </div>
   </section>
 
@@ -365,7 +348,7 @@ function guideImgSrc(step){  // step: 1〜4
 }
 
 /* ====== 状態 ====== */
-const state = {store:null, activity:null, plan:null, guideStep:0};
+const state = {store:null, activity:null, plan:null, guideStep:0, reviewed:false};
 let history = ["line"];
 
 /* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
@@ -391,7 +374,7 @@ function back(){
   onEnter(id); show(id);
 }
 function restart(){
-  history=["line"]; state.store=state.activity=state.plan=null; state.guideStep=0;
+  history=["line"]; state.store=state.activity=state.plan=null; state.guideStep=0; state.reviewed=false;
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
   show('line');
 }
@@ -427,6 +410,7 @@ function onEnter(id){
   if(id==='fee') renderFee();
   if(id==='guide') renderGuide();
   if(id==='register') renderRegister();
+  if(id==='done') renderDone();
 }
 function startGuide(){ state.guideStep=0; go('guide'); }
 
@@ -503,13 +487,13 @@ function renderFee(){
     : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
   document.getElementById('feeTitle').textContent = `${state.plan.name}　¥${state.plan.price.toLocaleString()}（税込）`;
   document.getElementById('feeTime').textContent = state.activity.time;
-  // 支払い方法：西天満は現金不可
+  // 支払い方法（2026-07-08打ち合わせ：カード/PayPay/コンビニ払い=Stripe決済。西天満は現金不可）
   if(state.store.noCash){
-    document.getElementById('feePay').textContent = 'クレジット / PayPay';
+    document.getElementById('feePay').textContent = 'カード / PayPay / コンビニ払い';
     document.getElementById('feeNote').textContent = '※ この店舗は現金でのお支払いができません';
   }else{
-    document.getElementById('feePay').textContent = 'クレジット / PayPay / 現金';
-    document.getElementById('feeNote').textContent = '※ JCBはご利用いただけません';
+    document.getElementById('feePay').textContent = '現金 / カード / PayPay / コンビニ払い';
+    document.getElementById('feeNote').textContent = '※ コンビニ払いはセブン-イレブンがご利用いただけません';
   }
 }
 
@@ -532,13 +516,13 @@ function renderGuide(){
   }
   const next = document.getElementById('guideNext');
   next.innerHTML = (state.guideStep===GUIDE.length-1)
-    ? '<i class="ti ti-check"></i> 作り終わった → お会計へ'
+    ? '<i class="ti ti-check"></i> 作り終わった → 次へ'
     : '<i class="ti ti-arrow-right"></i> 次へ';
   saveProgress();
 }
 function guideNext(){
   if(state.guideStep < GUIDE.length-1){ state.guideStep++; renderGuide(); }
-  else{ go('register'); }
+  else{ go('review'); }  // 作り終わったら口コミ誘導（会計前）→ お会計
 }
 function guidePrev(){
   if(state.guideStep>0){ state.guideStep--; renderGuide(); }
@@ -547,7 +531,20 @@ function guidePrev(){
 
 /* ====== セルフレジ ====== */
 function renderRegister(){
-  document.getElementById('regPay').textContent = state.store.noCash ? 'クレジット・PayPay（現金不可）' : '現金・クレジット・PayPay';
+  document.getElementById('regPay').textContent = state.store.noCash ? 'カード・PayPay・コンビニ払い（現金不可）' : '現金・カード・PayPay・コンビニ払い';
+}
+
+/* ====== 完了（退店可能）。レビューを書いた人にはお花引換コードを表示 ====== */
+function renderDone(){
+  const flower = state.reviewed
+    ? `<div class="cap">レビューありがとうございます！お花を1本プレゼント♡<br>スタッフ来店時にこの画面をお見せください</div>
+       <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>`
+    : `<div class="cap">よろしければGoogleレビューもお願いします ♡</div>`;
+  document.getElementById('doneBody').innerHTML = `
+    <div class="circle" style="color:var(--pink)"><i class="ti ti-confetti"></i></div>
+    <div class="sub">お会計が完了しました</div>
+    <div class="cap">ご退店いただけます<br>本日はありがとうございました ♡</div>
+    ${flower}`;
 }
 
 /* ====== トースト ====== */
@@ -563,7 +560,7 @@ function toast(msg){
 renderAreaChips();
 const saved = loadProgress();
 const last = saved && saved.history && saved.history[saved.history.length-1];
-if(saved && last && last!=='line' && last!=='flower'){
+if(saved && last && last!=='line' && last!=='flower' && last!=='done'){
   history = saved.history;
   Object.assign(state, saved.state);
   onEnter(last);
