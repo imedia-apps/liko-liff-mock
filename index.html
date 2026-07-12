@@ -2,319 +2,576 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>キャンバスアートLiko LIFF 顧客導線モック</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>キャンバスアート Liko｜LINE接客デモ</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <style>
 :root{
   --beige:#F5EFE6; --brown:#8B6F47; --brown-d:#6B5544; --pink:#D4A5A5;
   --scr:#F7F2EA; --line:#E7DCCB; --ink:#4A3B2E; --muted:#9B8B7A;
+  --green:#06C755;
   --font-sans:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
   --font-serif:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--beige);font-family:var(--font-sans);padding:24px;color:var(--ink)}
-.flow-title{text-align:center;font-family:var(--font-serif);font-size:24px;color:var(--brown);margin:4px 0 22px}
-.flow{display:flex;flex-wrap:wrap;gap:14px 10px;justify-content:center;align-items:flex-start;max-width:1860px;margin:0 auto}
-.step{display:flex;flex-direction:column;align-items:center;gap:8px;width:300px}
-.step .lbl{font-size:13px;color:var(--brown);font-weight:700}
-.step .lbl small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:#E7DCCB;
+  font-family:var(--font-sans);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
 
-/* phone */
-.lk-phone{background:#2f2620;border-radius:34px;padding:9px;box-shadow:0 10px 26px rgba(80,60,40,.18)}
-.lk-scr{background:var(--scr);border-radius:26px;overflow:hidden;width:282px;height:566px;display:flex;flex-direction:column}
-.lk-hdr{display:flex;align-items:center;gap:9px;padding:14px 14px 10px;border-bottom:1px solid var(--line)}
-.lk-back{color:#9A8167;font-size:18px}
-.lk-ttl{font-family:var(--font-serif);font-size:15px;color:var(--brown-d)}
-.lk-brand{font-family:var(--font-serif);font-size:18px;color:var(--brown);letter-spacing:.04em}
-.lk-brand small{display:block;font-size:9px;letter-spacing:.3em;color:var(--pink)}
-.lk-body{padding:13px;flex:1;display:flex;flex-direction:column;gap:9px;overflow:hidden}
-.lk-cap{font-size:11px;color:var(--muted)}
-.lk-sub{font-size:13px;color:var(--brown-d);font-weight:600}
-.lk-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:12px;color:var(--muted)}
-.lk-chips{display:flex;gap:6px;flex-wrap:wrap}
-.lk-chip{font-size:11px;padding:5px 11px;border-radius:14px;background:#EDE4D5;color:var(--brown-d)}
-.lk-chip.on{background:var(--brown-d);color:var(--scr)}
-.lk-card{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-.lk-card .nm{font-size:13px;color:var(--ink)}
-.lk-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:#EDE4D5;color:#8A7461}
-.lk-tag.on{background:#E7C8CC;color:#A85C6B}
-.lk-thumb{width:42px;height:42px;border-radius:9px;background:#EAE0D0;display:flex;align-items:center;justify-content:center;color:#B9A98F;font-size:19px;flex:none}
-.lk-price{font-size:13px;color:var(--brown-d);font-weight:600}
-.lk-photo{background:#EAE0D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#B09A7E;font-size:11px}
-.lk-img{width:100%;border-radius:12px;border:1px solid #EAE0D0;background:#fff;object-fit:contain;display:block}
-.lk-plan{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between}
-.lk-plan.hot{border:1.5px solid var(--pink);background:#FBF3F2;position:relative}
-.lk-plan .pn{font-size:13px;color:var(--ink)}
-.lk-badge{position:absolute;top:-9px;right:10px;background:var(--pink);color:#fff;font-size:10px;padding:2px 9px;border-radius:10px}
-.lk-fee{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:11px 13px;font-size:12px;display:flex;flex-direction:column;gap:6px}
-.lk-row{display:flex;justify-content:space-between}
-.lk-note{font-size:10px;color:#C07A6E}
-.lk-cta{background:var(--brown-d);color:var(--scr);text-align:center;padding:12px;border-radius:12px;font-size:13px;margin-top:auto}
-.lk-cta.ghost{background:transparent;color:var(--muted);padding:7px;margin-top:4px}
-.lk-cta.green{background:#06C755}
-.lk-dots{display:flex;gap:5px;align-items:center;font-size:10px;color:var(--muted)}
-.lk-dot{width:7px;height:7px;border-radius:50%;background:#D8CBB5}
-.lk-dot.on{background:var(--pink)}
-.lk-q{margin:auto 13px 13px;display:flex;align-items:center;justify-content:center;gap:6px;background:#06C755;color:#fff;font-size:11px;padding:9px;border-radius:11px}
-.lk-nav{display:flex;border-top:1px solid var(--line);background:#fff}
-.lk-nav div{flex:1;text-align:center;padding:8px 0;font-size:9px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
-.lk-nav i{font-size:16px}
-.lk-pay{display:flex;gap:8px;justify-content:center;color:#7E6A55;font-size:22px}
-.lk-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
-.lk-circle{width:84px;height:84px;border-radius:50%;background:#EFE3D2;display:flex;align-items:center;justify-content:center;color:var(--brown);font-size:38px}
-.lk-rev{display:flex;align-items:flex-start;gap:9px;background:#fff;border:1px solid #EAE0D0;border-radius:10px;padding:9px 11px;font-size:12px}
-.lk-num{width:20px;height:20px;border-radius:50%;background:var(--brown-d);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none}
-.stars{color:#E8B44A;font-size:14px;letter-spacing:2px}
+/* アプリ枠（PCでは中央にスマホ幅／実機では全画面） */
+.app{
+  position:relative;width:100%;max-width:420px;height:100dvh;max-height:900px;
+  background:var(--scr);overflow:hidden;
+  box-shadow:0 12px 40px rgba(80,60,40,.22);
+  display:flex;flex-direction:column;
+}
+@media (max-width:430px){ .app{max-height:none;box-shadow:none} }
 
-/* single mode */
-body.only{padding:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:transparent}
-body.only .flow-title{display:none}
-body.only .flow{gap:0}
-body.only .step:not(.show){display:none}
-body.only .step .lbl{display:none}
-body.only .step{width:auto;padding:18px}
+/* 画面切替 */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--scr);
+  animation:fade .28s ease}
+.screen.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
 
-/* app mode（デフォルト）：スマホフレーム無し・実機の画面いっぱいに表示して1画面ずつタップで進める */
-body.app{padding:0;margin:0;height:100dvh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--scr)}
-body.app .flow-title{display:none}
-body.app .flow{gap:0}
-body.app .step:not(.show){display:none}
-body.app .step .lbl{display:none}
-body.app .step{width:282px;padding:0;transform:scale(var(--app-scale,1));transform-origin:center center}
-body.app .lk-phone{background:none;border-radius:0;padding:0;box-shadow:none}
-body.app .lk-scr{border-radius:0}
-body.app .lk-card,body.app .lk-plan,body.app .lk-cta,body.app .lk-back{cursor:pointer}
-body.app .lk-card:active,body.app .lk-plan:active,body.app .lk-cta:active{opacity:.75}
-body.app{-webkit-user-select:none;user-select:none}
+/* ヘッダー */
+.hdr{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);flex:none}
+.hdr .back{color:#9A8167;font-size:22px;cursor:pointer;width:24px}
+.hdr .back.hide{visibility:hidden}
+.hdr .ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d)}
+.brand{font-family:var(--font-serif);font-size:20px;color:var(--brown);letter-spacing:.04em;text-align:center;width:100%}
+.brand small{display:block;font-size:9px;letter-spacing:.34em;color:var(--pink);margin-top:2px}
+
+/* 本文 */
+.body{padding:16px;flex:1;display:flex;flex-direction:column;gap:11px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cap{font-size:12px;color:var(--muted)}
+.sub{font-size:14px;color:var(--brown-d);font-weight:600}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.circle{width:92px;height:92px;border-radius:50%;background:#EFE3D2;display:flex;align-items:center;justify-content:center;color:var(--brown);font-size:42px}
+.circle.green{background:var(--green);color:#fff}
+
+/* 検索・チップ */
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:13px;flex:none}
+.search input{border:0;outline:0;font-size:13px;background:transparent;flex:1;color:var(--ink);font-family:inherit}
+.search input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;flex:none}
+.chip{font-size:12px;padding:6px 13px;border-radius:15px;background:#EDE4D5;color:var(--brown-d);cursor:pointer;user-select:none}
+.chip.on{background:var(--brown-d);color:var(--scr)}
+
+/* カード */
+.card{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:transform .08s}
+.card:active{transform:scale(.98)}
+.card .ic{color:#9A8167;font-size:22px;flex:none}
+.card .nm{font-size:14px;color:var(--ink)}
+.card .meta{font-size:11px;color:var(--muted);margin-top:2px}
+.card .grow{flex:1;min-width:0}
+.tag{font-size:10px;padding:3px 9px;border-radius:10px;background:#EDE4D5;color:#8A7461;flex:none}
+.tag.on{background:#E7C8CC;color:#A85C6B}
+.count{font-size:11px;color:var(--muted);flex:none}
+
+/* プラン */
+.plan{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;position:relative;transition:transform .08s}
+.plan:active{transform:scale(.99)}
+.plan.sel{border:2px solid var(--brown-d);background:#FBF7F0}
+.plan.hot{border:1.5px solid var(--pink)}
+.plan.hot.sel{border:2px solid var(--pink)}
+.plan .pn{font-size:14px;color:var(--ink)}
+.plan .price{font-size:14px;color:var(--brown-d);font-weight:700}
+.badge{position:absolute;top:-9px;right:12px;background:var(--pink);color:#fff;font-size:10px;padding:2px 10px;border-radius:10px}
+
+/* 写真プレースホルダ */
+.photo{background:#EAE0D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#B09A7E;font-size:12px;flex:none}
+.photo i{font-size:28px}
+
+/* 料金枠 */
+.fee{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px 14px;font-size:13px;display:flex;flex-direction:column;gap:8px;flex:none}
+.row{display:flex;justify-content:space-between}
+.note{font-size:11px;color:#C07A6E}
+.banner{background:#FBF3F2;border:1px solid #EDD3D3;border-radius:11px;padding:11px 12px;font-size:12px;color:#A85C6B;display:flex;gap:8px;align-items:flex-start}
+.banner i{font-size:16px;flex:none;margin-top:1px}
+
+/* ステップ進行 */
+.dots{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--muted);flex:none}
+.dot{width:8px;height:8px;border-radius:50%;background:#D8CBB5}
+.dot.on{background:var(--pink)}
+
+/* CTA */
+.cta{background:var(--brown-d);color:var(--scr);text-align:center;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;flex:none;transition:transform .08s;user-select:none}
+.cta:active{transform:scale(.98)}
+.cta.green{background:var(--green)}
+.cta.ghost{background:transparent;color:var(--muted);padding:9px;font-size:13px}
+.cta.disabled{background:#D8CBB5;color:#fff;pointer-events:none}
+.spacer{margin-top:auto}
+
+/* レビュー手順 */
+.rev{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid #EAE0D0;border-radius:11px;padding:11px 12px;font-size:13px}
+.num{width:22px;height:22px;border-radius:50%;background:var(--brown-d);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.stars{color:#E8B44A;font-size:15px;letter-spacing:2px}
+
+/* 支払いアイコン */
+.pay{display:flex;gap:14px;justify-content:center;color:#7E6A55;font-size:26px}
+
+/* 下部「LINEで質問」バー */
+.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#fff;font-size:12px;padding:11px;border-radius:11px;cursor:pointer;flex:none}
+
+/* タブナビ */
+.nav{display:flex;border-top:1px solid var(--line);background:#fff;flex:none}
+.nav div{flex:1;text-align:center;padding:9px 0;font-size:9px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav i{font-size:18px}
+
+/* トースト */
+.toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);max-width:82%;background:rgba(74,59,46,.96);color:#fff;font-size:12px;line-height:1.55;padding:11px 16px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;text-align:center;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* デモ用ラベル */
+.demo-flag{position:absolute;top:8px;right:8px;background:rgba(139,111,71,.9);color:#fff;font-size:9px;padding:3px 8px;border-radius:8px;letter-spacing:.05em;z-index:15}
+
+/* LINEで質問 入力シート */
+.sheet-mask{position:absolute;inset:0;background:rgba(40,30,22,.38);display:none;align-items:flex-end;z-index:30}
+.sheet-mask.show{display:flex}
+.sheet{background:#fff;width:100%;border-radius:18px 18px 0 0;padding:18px 16px 16px;display:flex;flex-direction:column;gap:10px;animation:sheetUp .28s ease}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.sheet-ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d);display:flex;align-items:center;gap:7px}
+.sheet-ttl i{color:var(--green);font-size:19px}
+.sheet-cap{font-size:11px;color:var(--muted)}
+.sheet-input{border:1px solid var(--line);border-radius:11px;padding:11px;font-size:13px;font-family:inherit;min-height:90px;resize:none;color:var(--ink);outline:none;background:var(--scr)}
+.sheet-input::placeholder{color:var(--muted)}
+.sheet-ctx{font-size:11px;color:#A85C6B;background:#FBF3F2;border-radius:9px;padding:9px 10px;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.sheet-ctx i{font-size:14px;flex:none;margin-top:1px}
 </style>
 </head>
 <body>
-<div class="flow-title">キャンバスアート Liko｜LINE追加後の顧客導線（10画面）</div>
-<div class="flow">
+<div class="app" id="app">
+  <span class="demo-flag">DEMO</span>
 
-  <!-- S1 LINE友だち追加 -->
-  <div class="step" data-s="1"><div class="lbl">STEP 1<small>LINE友だち追加</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-body" style="justify-content:center">
-      <div class="lk-center">
-        <div class="lk-brand" style="font-size:22px">Liko<small>CANVAS ART</small></div>
-        <div class="lk-circle green" style="background:#06C755;color:#fff"><i class="ti ti-brand-line"></i></div>
-        <div class="lk-sub">LINEで友だち追加</div>
-        <div class="lk-cap">追加 → リッチメニューでアプリ起動</div>
+  <!-- 1. LINE友だち追加 -->
+  <section class="screen" data-scr="line">
+    <div class="body" style="justify-content:center;gap:18px">
+      <div class="center" style="flex:none">
+        <div class="brand" style="font-size:26px">Liko<small>CANVAS ART</small></div>
+        <div class="circle green"><i class="ti ti-brand-line"></i></div>
+        <div class="sub">LINEで友だち追加</div>
+        <div class="cap">追加すると、リッチメニューからアプリが起動します</div>
       </div>
-      <div class="lk-cta green">＋ 友だち追加</div>
+      <div class="cta green spacer" onclick="go('store')">＋ 友だち追加してはじめる</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S0 店舗選択（30店舗1画面・核） -->
-  <div class="step" data-s="0"><div class="lbl">STEP 2<small>店舗を選ぶ（30店舗）</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">店舗を選ぶ</span></div>
-    <div class="lk-body">
-      <div class="lk-search"><i class="ti ti-search"></i>店名・エリアで探す</div>
-      <div class="lk-chips"><span class="lk-chip on">大阪</span><span class="lk-chip">東京</span><span class="lk-chip">京都</span><span class="lk-chip">横浜</span><span class="lk-chip">兵庫</span></div>
-      <div class="lk-card"><i class="ti ti-map-pin lk-back"></i><div style="flex:1"><div class="nm">大阪心斎橋</div><div class="lk-cap">大阪エリア・徒歩3分</div></div><span class="lk-tag">無人</span></div>
-      <div class="lk-card"><i class="ti ti-map-pin lk-back"></i><div style="flex:1"><div class="nm">大阪天満</div><div class="lk-cap">大阪エリア</div></div><span class="lk-tag">無人</span></div>
-      <div class="lk-card"><i class="ti ti-map-pin lk-back"></i><div style="flex:1"><div class="nm">心斎橋アメ村</div><div class="lk-cap">大阪エリア</div></div><span class="lk-tag on">有人</span></div>
-      <div class="lk-card"><i class="ti ti-map-pin lk-back"></i><div style="flex:1"><div class="nm">西天満</div><div class="lk-cap">大阪エリア</div></div><span class="lk-tag">無人</span></div>
+  <!-- 2. 店舗選択（30店舗） -->
+  <section class="screen" data-scr="store">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">店舗を選ぶ</span></div>
+    <div class="body">
+      <div class="search"><i class="ti ti-search" style="color:var(--muted)"></i>
+        <input id="storeSearch" placeholder="店名・エリアで探す" oninput="renderStores()"></div>
+      <div class="chips" id="areaChips"></div>
+      <div class="count" id="storeCount"></div>
+      <div id="storeList" style="display:flex;flex-direction:column;gap:9px"></div>
     </div>
-    <div class="lk-q"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
-  </div></div></div>
+    <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
+  </section>
 
-  <!-- S2 ウェルカム -->
-  <div class="step" data-s="2"><div class="lbl">STEP 3<small>ウェルカム画面</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><span class="lk-brand">Liko<small>CANVAS ART</small></span></div>
-    <div class="lk-body">
-      <div class="lk-sub" style="text-align:center">心斎橋店へようこそ <span style="color:var(--pink)">♡</span></div>
-      <div class="lk-cap" style="text-align:center;margin-bottom:2px">アクティビティメニュー</div>
-      <div class="lk-card"><i class="ti ti-circles lk-back"></i><div class="nm" style="flex:1">スネークブレスレット</div><i class="ti ti-chevron-right lk-back"></i></div>
-      <div class="lk-card"><i class="ti ti-diamond lk-back"></i><div class="nm" style="flex:1">コインリング</div><i class="ti ti-chevron-right lk-back"></i></div>
-      <div class="lk-card"><i class="ti ti-flask lk-back"></i><div class="nm" style="flex:1">香りづくり体験</div><i class="ti ti-chevron-right lk-back"></i></div>
-      <div class="lk-card"><i class="ti ti-eyeglass lk-back"></i><div class="nm" style="flex:1">メガネカスタム</div><i class="ti ti-chevron-right lk-back"></i></div>
-      <div class="lk-card"><i class="ti ti-grid-dots lk-back"></i><div class="nm" style="flex:1">アイロンビーズ</div><i class="ti ti-chevron-right lk-back"></i></div>
+  <!-- 3. ウェルカム（体験選択） -->
+  <section class="screen" data-scr="welcome">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="brand" id="welcomeBrand">Liko<small>CANVAS ART</small></span></div>
+    <div class="body">
+      <div class="sub" style="text-align:center" id="welcomeMsg">ようこそ ♡</div>
+      <div class="cap" style="text-align:center;margin-bottom:2px">体験メニューを選んでください</div>
+      <div id="actList" style="display:flex;flex-direction:column;gap:9px"></div>
     </div>
-    <div class="lk-nav"><div><i class="ti ti-calendar"></i>予約</div><div><i class="ti ti-device-mobile"></i>設備・支払い</div><div><i class="ti ti-message-circle"></i>LINEサポート</div></div>
-  </div></div></div>
-
-  <!-- S3 プラン選択 -->
-  <div class="step" data-s="3"><div class="lbl">STEP 4<small>プラン選択画面</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">プランを選択してください</span></div>
-    <div class="lk-body">
-      <div class="lk-plan"><div><div class="pn">一般プラン</div></div><span class="lk-price">¥2,500</span></div>
-      <div class="lk-plan"><div><div class="pn">学割プラン</div></div><span class="lk-price">¥2,000</span></div>
-      <div class="lk-plan hot"><span class="lk-badge">人気 No.1</span><div><div class="pn">付け放題プラン</div></div><span class="lk-price">¥3,500</span></div>
-      <div class="lk-plan"><div><div class="pn">パーツ20個プラン</div></div><span class="lk-price">¥1,500</span></div>
-      <div class="lk-cta">このプランを選ぶ</div>
+    <div class="nav">
+      <div><i class="ti ti-map-pin"></i>店舗</div>
+      <div><i class="ti ti-device-mobile"></i>設備・支払い</div>
+      <div onclick="askLine()"><i class="ti ti-message-circle"></i>LINEサポート</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S4 プラン詳細・料金 -->
-  <div class="step" data-s="4"><div class="lbl">STEP 5<small>プラン詳細・料金画面</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">料金のご案内</span></div>
-    <div class="lk-body">
-      <img class="lk-img" id="plan-img" style="height:150px" src="assets/bracelet_tsukehodai_step01.png" alt="プラン説明の画像">
-      <div class="lk-sub" id="plan-title" style="text-align:center">付け放題プラン ¥3,500（税込）</div>
-      <div class="lk-fee">
-        <div class="lk-row"><span class="lk-cap">所要時間</span><span>約30分</span></div>
-        <div class="lk-row"><span class="lk-cap">お支払い</span><span>クレジット / PayPay / 現金</span></div>
-        <div class="lk-note">※ JCBはご利用いただけません</div>
+  <!-- 4. プラン選択 -->
+  <section class="screen" data-scr="plan">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">プランを選ぶ</span></div>
+    <div class="body">
+      <div class="cap" id="planActName"></div>
+      <div id="planList" style="display:flex;flex-direction:column;gap:9px"></div>
+      <div class="cta spacer disabled" id="planCta" onclick="go('fee')">プランを選んでください</div>
+    </div>
+  </section>
+
+  <!-- 5. 料金・同意 -->
+  <section class="screen" data-scr="fee">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">料金のご案内</span></div>
+    <div class="body">
+      <div id="feeMedia" style="flex:none"><div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div></div>
+      <div class="sub" style="text-align:center" id="feeTitle"></div>
+      <div class="fee">
+        <div class="row"><span class="cap">所要時間</span><span id="feeTime">約30分</span></div>
+        <div class="row"><span class="cap">お支払い</span><span id="feePay">クレジット / PayPay / 現金</span></div>
+        <div class="note" id="feeNote">※ JCBはご利用いただけません</div>
       </div>
-      <div class="lk-cta">理解しました</div>
+      <div class="cta spacer" onclick="startGuide()">理解しました</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S5 制作ガイド -->
-  <div class="step" data-s="5"><div class="lbl">STEP 6<small>制作ガイド画面</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">作り方ガイド</span></div>
-    <div class="lk-body">
-      <div class="lk-dots" id="guide-dots"><span class="lk-dot on"></span><span class="lk-dot on"></span><span class="lk-dot"></span><span class="lk-dot"></span><span style="margin-left:6px">ステップ <span id="guide-n">2</span> / 4</span></div>
-      <img class="lk-img" id="guide-img" style="height:256px" src="assets/bracelet_tsukehodai_step02.png" alt="作り方ガイド ステップ2">
-      <div class="lk-cta" id="guide-next"><i class="ti ti-arrow-right"></i> 次へ</div>
-      <div class="lk-cta ghost" id="guide-prev">前のステップに戻る</div>
+  <!-- 6. 制作ガイド -->
+  <section class="screen" data-scr="guide">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">作り方ガイド</span></div>
+    <div class="body">
+      <div class="dots" id="guideDots"></div>
+      <div id="guideMedia" style="flex:none"><div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div></div>
+      <div class="sub" style="text-align:center" id="guideText"></div>
+      <div class="cta spacer" id="guideNext" onclick="guideNext()"><i class="ti ti-arrow-right"></i> 次へ</div>
+      <div class="cta ghost" onclick="guidePrev()">前のステップに戻る</div>
     </div>
-    <div class="lk-q"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
-  </div></div></div>
+    <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>作り方で困ったら質問</div>
+  </section>
 
-  <!-- S6 セルフレジ -->
-  <div class="step" data-s="6"><div class="lbl">STEP 7<small>セルフレジ案内</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">お会計に進んでください</span></div>
-    <div class="lk-body">
-      <div class="lk-cap" style="text-align:center">お支払いいただく方法</div>
-      <div class="lk-pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i></div>
-      <div class="lk-cap" style="text-align:center">現金・クレジット・PayPay</div>
-      <div class="lk-photo" style="height:120px"><i class="ti ti-cash-register" style="font-size:28px"></i>セルフレジマシンへ</div>
-      <div class="lk-cta">支払いを完了する</div>
+  <!-- 7. セルフレジ -->
+  <section class="screen" data-scr="register">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お会計</span></div>
+    <div class="body">
+      <div class="cap" style="text-align:center">お支払いいただける方法</div>
+      <div class="pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i></div>
+      <div class="cap" style="text-align:center" id="regPay">現金・クレジット・PayPay</div>
+      <div class="photo" style="height:130px;margin-top:6px"><i class="ti ti-cash-register"></i>セルフレジへお進みください</div>
+      <div class="cta spacer" onclick="go('photo')">支払いを完了する</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S7 写真アップロード -->
-  <div class="step" data-s="7"><div class="lbl">STEP 8<small>写真アップロード</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-chevron-left lk-back"></i><span class="lk-ttl">完成品のお写真</span></div>
-    <div class="lk-body">
-      <div class="lk-center" style="flex:none;margin-top:6px"><div class="lk-circle"><i class="ti ti-camera"></i></div>
-        <div class="lk-sub">完成品のお写真を<br>撮らせてください</div></div>
-      <div class="lk-photo" style="height:150px"><i class="ti ti-upload" style="font-size:26px"></i>写真をアップロード</div>
-      <div class="lk-cap" style="text-align:center">※ SNS掲載の可否を確認します</div>
-      <div class="lk-cta">次へ進む</div>
+  <!-- 8. 写真アップロード -->
+  <section class="screen" data-scr="photo">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">完成品のお写真</span></div>
+    <div class="body">
+      <div class="center" style="flex:none;margin-top:8px"><div class="circle"><i class="ti ti-camera"></i></div>
+        <div class="sub">完成品のお写真を<br>撮らせてください</div></div>
+      <div class="photo" style="height:150px;cursor:pointer" onclick="toast('写真を選択しました（デモ）')"><i class="ti ti-upload"></i>写真をアップロード</div>
+      <div class="cap" style="text-align:center">※ SNS掲載の可否を確認します</div>
+      <div class="cta spacer" onclick="go('review')">次へ進む</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S8 Googleレビュー -->
-  <div class="step" data-s="8"><div class="lbl">STEP 9<small>Googleレビュー画面</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><i class="ti ti-brand-google lk-back"></i><span class="lk-ttl">レビューのご協力</span></div>
-    <div class="lk-body">
-      <div class="lk-cap" style="text-align:center">投稿でお花を1本プレゼント♡</div>
-      <div class="lk-rev"><span class="lk-num">1</span><div>Google マップを検索</div></div>
-      <div class="lk-rev"><span class="lk-num">2</span><div>スタートを選択<div class="stars">★★★★★</div></div></div>
-      <div class="lk-rev"><span class="lk-num">3</span><div>レビューを書きにいく</div></div>
-      <div class="lk-cta">レビューを書きにいく</div>
-      <div class="lk-cta ghost">書かない</div>
+  <!-- 9. Googleレビュー -->
+  <section class="screen" data-scr="review">
+    <div class="hdr"><i class="ti ti-brand-google back" style="color:#9A8167"></i><span class="ttl">レビューのご協力</span></div>
+    <div class="body">
+      <div class="cap" style="text-align:center">投稿でお花を1本プレゼント ♡</div>
+      <div class="rev"><span class="num">1</span><div>Googleマップで店舗を検索</div></div>
+      <div class="rev"><span class="num">2</span><div>お星さまを選ぶ<div class="stars">★★★★★</div></div></div>
+      <div class="rev"><span class="num">3</span><div>レビューを書いて投稿</div></div>
+      <div class="cta spacer" onclick="toast('Googleレビューへ移動します（デモ）');setTimeout(()=>go('flower'),700)">レビューを書きにいく</div>
+      <div class="cta ghost" onclick="go('flower')">今回は書かない</div>
     </div>
-  </div></div></div>
+  </section>
 
-  <!-- S9 お花プレゼント -->
-  <div class="step" data-s="9"><div class="lbl">STEP 10<small>お花1本プレゼント</small></div>
-  <div class="lk-phone"><div class="lk-scr">
-    <div class="lk-hdr"><span class="lk-ttl">お花1本プレゼント</span></div>
-    <div class="lk-body">
-      <div class="lk-center">
-        <div class="lk-circle" style="color:var(--pink)"><i class="ti ti-flower"></i></div>
-        <div class="lk-sub">お花を1本プレゼントしました</div>
-        <div class="lk-cap">スタッフへこの画面をお見せください<br>本日はありがとうございました</div>
+  <!-- 10. お花プレゼント -->
+  <section class="screen" data-scr="flower">
+    <div class="body">
+      <div class="center">
+        <div class="circle" style="color:var(--pink)"><i class="ti ti-flower"></i></div>
+        <div class="sub">お花を1本プレゼントしました</div>
+        <div class="cap">スタッフへこの画面をお見せください<br>本日はありがとうございました ♡</div>
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>
       </div>
-      <div class="lk-cta">終了する</div>
+      <div class="cta spacer" onclick="restart()">最初にもどる</div>
     </div>
-  </div></div></div>
+  </section>
 
+  <!-- LINEで質問 入力シート -->
+  <div class="sheet-mask" id="sheetMask" onclick="closeAsk()">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-ttl"><i class="ti ti-brand-line"></i>LINEで質問する</div>
+      <div class="sheet-cap">スタッフが 11:00〜19:00 に返信します</div>
+      <textarea id="askText" class="sheet-input" placeholder="困っていることを入力してください（例：留め具のつけ方がわかりません）"></textarea>
+      <div class="sheet-ctx" id="askCtx"></div>
+      <div class="cta green" onclick="sendAsk()">送信する</div>
+      <div class="cta ghost" onclick="closeAsk()">閉じる</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 </div>
+
 <script>
-  const p = new URLSearchParams(location.search);
-  const only = p.get('only');
-  if(only){ document.body.classList.add('only');
-    const t = document.querySelector('.step[data-s="'+only+'"]');
-    if(t) t.classList.add('show');
-  }
+/* ====== 実データ（要件定義書 元依頼PDF §2.3〜2.6 準拠。本番はスプレッドシート／簡易DBから読み込む想定） ======
+   staff: 'none'=完全無人 / 'always'=常時有人 / 'weekend'=土日のみ有人
+   offers: その店舗で実施できるアクティビティID（§2.6 店舗×アクティビティ マトリックス）
+   ※名古屋栄は2026年8月開業のため現時点（全18店舗）には含めない */
+const ACTIVITIES = [
+  {id:"snake",    name:"スネークブレスレット作り", icon:"ti-circles",   time:"約30分"},
+  {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分"},
+  {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分"},
+  {id:"chain",    name:"チェーンアクセサリー作り", icon:"ti-link",      time:"約35分"},
+  {id:"pen",      name:"カスタムボールペンづくり", icon:"ti-pencil",    time:"約20分"},
+  {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分"},
+  {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分"},
+  {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"約20分"},
+  {id:"glasses",  name:"カスタムメガネ",           icon:"ti-eyeglass",  time:"約30分"},
+  {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分"},
+];
+const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
 
-  // ===== アプリモード（デフォルト）：1画面ずつタップで進める =====
-  // ?flow=1 で従来の10画面一覧、?only=N で単一画面（スクショ用）
-  const appMode = !only && !p.get('flow');
-  const order = ['1','0','2','3','4','5','6','7','8','9'];  // 画面の並び（STEP1〜10）
-  let cur = 0;
-  function show(i){
-    cur = Math.max(0, Math.min(order.length-1, i));
-    document.querySelectorAll('.step').forEach(s=>s.classList.toggle('show', s.dataset.s===order[cur]));
-    window.scrollTo(0,0);
-  }
+const STORES = [
+  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","ring","beads","glasses","perfume"]},
+  {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"], nakazakiNote:true},
+  {name:"中崎町",           area:"大阪", staff:"always",  offers:["snake","flower"], walk:"予約不要"},
+  {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["snake","flower"]},
+  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["snake","flower"]},
+  {name:"西天満",           area:"大阪", staff:"none",    offers:["snake","flower"], noCash:true},
+  {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"]},
+  {name:"京都",             area:"京都", staff:"always",  offers:["flower","art","chain"]},
+  {name:"祇園",             area:"京都", staff:"none",    offers:["snake","flower","pen"]},
+  {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["snake","pen"]},
+  {name:"浅草",             area:"東京", staff:"weekend", offers:["snake","flower"]},
+  {name:"浅草2号店",        area:"東京", staff:"none",    offers:["snake","flower"]},
+  {name:"渋谷609",          area:"東京", staff:"none",    offers:["snake"]},
+  {name:"渋谷305",          area:"東京", staff:"none",    offers:["snake"]},
+  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["snake","flower"]},
+  {name:"池袋",             area:"東京", staff:"weekend", offers:["snake","flower","art"]},
+  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["snake","flower","pen"]},
+  {name:"横浜2号店",        area:"横浜", staff:"none",    offers:["snake","flower"]},
+];
+const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知"];
+const STAFF_TAG = {
+  none:    {label:"無人",     cls:""},
+  always:  {label:"有人",     cls:"on"},
+  weekend: {label:"土日有人", cls:"on"},
+};
 
-  // プラン選択 → プラン詳細・制作ガイドの画像セットを出し分け
-  let plan = {key:'tsukehodai', label:'付け放題プラン', price:'¥3,500'};
-  const plans = {
-    '一般プラン':      {key:'ippan',      label:'一般プラン',      price:'¥2,500'},
-    '学割プラン':      {key:'gakusei',    label:'学割プラン',      price:'¥2,000'},
-    '付け放題プラン':  {key:'tsukehodai', label:'付け放題プラン',  price:'¥3,500'},
-    'パーツ20個プラン':{key:'ippan',      label:'パーツ20個プラン', price:'¥1,500'}
-  };
-  function applyPlan(){
-    document.getElementById('plan-img').src = 'assets/bracelet_' + plan.key + '_step01.png';
-    document.getElementById('plan-title').textContent = plan.label + ' ' + plan.price + '（税込）';
-  }
+const PLANS = [
+  {name:"一般プラン",       price:2500},
+  {name:"学割プラン",       price:2000},
+  {name:"付け放題プラン",   price:3500, hot:true},
+  {name:"パーツ20個プラン", price:1500},
+];
 
-  // 制作ガイド：選択プランのSTEP01〜04を次へ/前へで切り替え
-  let gs = 2;
-  const gImg = document.getElementById('guide-img');
-  const gDots = document.querySelectorAll('#guide-dots .lk-dot');
-  function guideRender(){
-    gImg.src = 'assets/bracelet_' + plan.key + '_step0' + gs + '.png';
-    gImg.alt = '作り方ガイド ステップ' + gs;
-    document.getElementById('guide-n').textContent = gs;
-    gDots.forEach((d,i)=>d.classList.toggle('on', i < gs));
+const GUIDE = [
+  "お好きなパーツ・ビーズを選びます",
+  "ビーズをお好みの順に通していきます",
+  "留め具をつけて長さを調整します",
+  "完成！サイズを確認しましょう",
+];
+
+/* ====== 作り方ガイド画像（クライアント提供・assets/ 20枚）======
+   スネークブレスレット＝bracelet（一般/学生/つけ放題）、チェーンアクセサリー＝accessory（一般/学生）。
+   セットが無いアクティビティ・プランは従来のプレースホルダー＋テキストにフォールバック */
+const GUIDE_IMG_FAMILY = { snake:'bracelet', chain:'accessory' };
+const GUIDE_IMG_PLANS = { bracelet:['ippan','gakusei','tsukehodai'], accessory:['ippan','gakusei'] };
+const PLAN_KEY = {'一般プラン':'ippan','学割プラン':'gakusei','付け放題プラン':'tsukehodai','パーツ20個プラン':'ippan'};
+function guideImgSrc(step){  // step: 1〜4
+  const fam = GUIDE_IMG_FAMILY[state.activity && state.activity.id];
+  if(!fam) return null;
+  let key = PLAN_KEY[state.plan && state.plan.name] || 'ippan';
+  if(!GUIDE_IMG_PLANS[fam].includes(key)) key = 'ippan';
+  return `assets/${fam}_${key}_step0${step}.png`;
+}
+
+/* ====== 状態 ====== */
+const state = {store:null, activity:null, plan:null, guideStep:0};
+let history = ["line"];
+
+/* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
+const LS_KEY = 'liko_demo_progress';
+function saveProgress(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({history, state})); }catch(e){}
+}
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; }
+}
+
+/* ====== 画面遷移 ====== */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.dataset.scr===id));
+  document.querySelectorAll('.screen.active .body').forEach(b=>b.scrollTop=0);
+  saveProgress();
+}
+function go(id){ history.push(id); onEnter(id); show(id); }
+function back(){
+  if(history.length<=1) return;
+  history.pop();
+  const id = history[history.length-1];
+  onEnter(id); show(id);
+}
+function restart(){
+  history=["line"]; state.store=state.activity=state.plan=null; state.guideStep=0;
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  show('line');
+}
+
+/* ====== LINEで質問（お客様が自分で入力。文脈は自動で添付。本番は liff.sendMessages で画面を離れず送信） ====== */
+function askLine(){
+  const cur = history[history.length-1];
+  let ctx = '';
+  if(state.store){
+    ctx = state.store.name + '店';
+    if(cur==='guide' && state.activity) ctx += `・${state.activity.name}・ステップ${state.guideStep+1}`;
+    else if(state.activity) ctx += `・${state.activity.name}`;
   }
-  document.getElementById('guide-next').addEventListener('click', ()=>{
-    if(gs<4){gs++; guideRender();}
-    else if(appMode){ show(6); }              // STEP04まで見たらセルフレジへ
+  const ctxEl = document.getElementById('askCtx');
+  if(ctx){
+    ctxEl.innerHTML = `<i class="ti ti-info-circle"></i><span>「${ctx}」の情報も一緒に届くので、状況をイチから説明しなくて大丈夫です</span>`;
+    ctxEl.style.display = 'flex';
+  }else{ ctxEl.style.display = 'none'; }
+  document.getElementById('askText').value = '';
+  document.getElementById('sheetMask').classList.add('show');
+}
+function closeAsk(){ document.getElementById('sheetMask').classList.remove('show'); }
+function sendAsk(){
+  closeAsk();
+  toast('質問を送りました。返信はLINEのトーク画面に届きます（この画面はそのまま残ります）');
+}
+
+/* 画面ごとの初期化 */
+function onEnter(id){
+  if(id==='store') renderStores();
+  if(id==='welcome') renderWelcome();
+  if(id==='plan') renderPlans();
+  if(id==='fee') renderFee();
+  if(id==='guide') renderGuide();
+  if(id==='register') renderRegister();
+}
+function startGuide(){ state.guideStep=0; go('guide'); }
+
+/* ====== 店舗選択 ====== */
+let activeArea = "すべて";
+function renderAreaChips(){
+  const box = document.getElementById('areaChips');
+  box.innerHTML = AREAS.map(a=>`<span class="chip ${a===activeArea?'on':''}" onclick="setArea('${a}')">${a}</span>`).join('');
+}
+function setArea(a){ activeArea=a; renderAreaChips(); renderStores(); }
+function renderStores(){
+  renderAreaChips();
+  const q = (document.getElementById('storeSearch').value||"").trim();
+  let list = STORES.filter(s=>{
+    const okArea = activeArea==="すべて" || s.area===activeArea;
+    const okQ = !q || s.name.includes(q) || s.area.includes(q);
+    return okArea && okQ;
   });
-  document.getElementById('guide-prev').addEventListener('click', ()=>{
-    if(gs>1){gs--; guideRender();}
-    else if(appMode){ show(4); }              // ステップ1で戻る→プラン詳細へ
-  });
+  document.getElementById('storeCount').textContent = `${list.length}店舗`;
+  document.getElementById('storeList').innerHTML = list.map(s=>{
+    const t = STAFF_TAG[s.staff];
+    const badge = `<span class="tag ${t.cls}">${t.label}</span>`;
+    const meta = [s.area+"エリア", s.walk].filter(Boolean).join('・');
+    return `<div class="card" onclick="selectStore('${s.name}')">
+      <i class="ti ti-map-pin ic"></i>
+      <div class="grow"><div class="nm">${s.name}</div><div class="meta">${meta}</div></div>
+      ${badge}</div>`;
+  }).join('') || `<div class="cap" style="text-align:center;padding:20px">該当する店舗がありません</div>`;
+}
+function selectStore(name){ state.store = STORES.find(s=>s.name===name); go('welcome'); }
 
-  if(appMode){
-    document.body.classList.add('app');
-    // 実機の画面サイズに合わせて等倍拡大（デザインは282x566基準）
-    const fit = () => document.documentElement.style.setProperty('--app-scale',
-      Math.min(window.innerWidth/282, window.innerHeight/566));
-    window.addEventListener('resize', fit); fit();
-    const q = (s, sel) => document.querySelector('.step[data-s="'+s+'"] '+sel);
-    const qa = (s, sel) => document.querySelectorAll('.step[data-s="'+s+'"] '+sel);
-    // 各画面のボタン → 次の画面へ
-    q('1','.lk-cta').addEventListener('click', ()=>show(1));                       // 友だち追加 → 店舗選択
-    qa('0','.lk-card').forEach(c=>c.addEventListener('click', ()=>show(2)));       // 店舗選択 → ウェルカム
-    qa('2','.lk-card').forEach(c=>c.addEventListener('click', ()=>show(3)));       // アクティビティ → プラン選択
-    qa('3','.lk-plan').forEach(pl=>pl.addEventListener('click', ()=>{              // プラン → 詳細（出し分け）
-      const nm = pl.querySelector('.pn').textContent.trim();
-      if(plans[nm]) plan = plans[nm];
-      applyPlan(); show(4);
-    }));
-    q('3','.lk-cta').addEventListener('click', ()=>{applyPlan(); show(4);});
-    q('4','.lk-cta').addEventListener('click', ()=>{gs=1; guideRender(); show(5);}); // 理解しました → ガイド
-    q('6','.lk-cta').addEventListener('click', ()=>show(7));                       // 支払い完了 → 写真
-    q('7','.lk-cta').addEventListener('click', ()=>show(8));                       // 写真 → レビュー
-    qa('8','.lk-cta').forEach(c=>c.addEventListener('click', ()=>show(9)));        // レビュー → お花
-    q('9','.lk-cta').addEventListener('click', ()=>show(2));                       // 終了 → ウェルカムへ戻る
-    // ヘッダーの「＜」で1画面戻る
-    document.querySelectorAll('.step .lk-hdr .ti-chevron-left').forEach(b=>{
-      b.addEventListener('click', ()=>show(cur-1));
-    });
-    show(0);
+/* ====== ウェルカム（体験選択） ====== */
+function renderWelcome(){
+  document.getElementById('welcomeMsg').innerHTML = `${state.store.name}店へようこそ <span style="color:var(--pink)">♡</span>`;
+  // その店舗で実施できる体験のみ表示（要件4.3）
+  const list = state.store.offers.map(id=>ACT[id]).filter(Boolean);
+  const note = state.store.nakazakiNote
+    ? `<div class="banner"><i class="ti ti-info-circle"></i><span>スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。</span></div>`
+    : '';
+  document.getElementById('actList').innerHTML = note + list.map(a=>
+    `<div class="card" onclick="selectActivity('${a.id}')">
+      <i class="ti ${a.icon} ic"></i>
+      <div class="grow"><div class="nm">${a.name}</div><div class="meta">${a.time}</div></div>
+      <i class="ti ti-chevron-right ic"></i></div>`).join('');
+}
+function selectActivity(id){ state.activity = ACT[id]; go('plan'); }
+
+/* ====== プラン選択 ====== */
+function renderPlans(){
+  document.getElementById('planActName').textContent = state.activity.name;
+  state.plan = null;
+  document.getElementById('planList').innerHTML = PLANS.map((p,i)=>
+    `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
+      ${p.hot?'<span class="badge">人気 No.1</span>':''}
+      <span class="pn">${p.name}</span><span class="price">¥${p.price.toLocaleString()}</span></div>`).join('');
+  updatePlanCta();
+}
+function selectPlan(i){
+  state.plan = PLANS[i];
+  document.querySelectorAll('#planList .plan').forEach(el=>el.classList.toggle('sel', +el.dataset.i===i));
+  updatePlanCta();
+}
+function updatePlanCta(){
+  const cta = document.getElementById('planCta');
+  if(state.plan){ cta.classList.remove('disabled'); cta.textContent = `${state.plan.name}で進む`; }
+  else{ cta.classList.add('disabled'); cta.textContent = 'プランを選んでください'; }
+}
+
+/* ====== 料金・同意 ====== */
+function renderFee(){
+  const src = guideImgSrc(1);
+  document.getElementById('feeMedia').innerHTML = src
+    ? `<img src="${src}" alt="プラン説明" style="width:100%;max-height:180px;object-fit:contain;background:#fff;border:1px solid #EAE0D0;border-radius:12px;display:block">`
+    : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
+  document.getElementById('feeTitle').textContent = `${state.plan.name}　¥${state.plan.price.toLocaleString()}（税込）`;
+  document.getElementById('feeTime').textContent = state.activity.time;
+  // 支払い方法：西天満は現金不可
+  if(state.store.noCash){
+    document.getElementById('feePay').textContent = 'クレジット / PayPay';
+    document.getElementById('feeNote').textContent = '※ この店舗は現金でのお支払いができません';
+  }else{
+    document.getElementById('feePay').textContent = 'クレジット / PayPay / 現金';
+    document.getElementById('feeNote').textContent = '※ JCBはご利用いただけません';
   }
+}
+
+/* ====== 制作ガイド ====== */
+function renderGuide(){
+  document.getElementById('guideDots').innerHTML =
+    GUIDE.map((_,i)=>`<span class="dot ${i<=state.guideStep?'on':''}"></span>`).join('')
+    + `<span style="margin-left:6px">ステップ ${state.guideStep+1} / ${GUIDE.length}</span>`;
+  const src = guideImgSrc(state.guideStep+1);
+  const txt = document.getElementById('guideText');
+  if(src){
+    document.getElementById('guideMedia').innerHTML =
+      `<img src="${src}" alt="作り方ガイド ステップ${state.guideStep+1}" style="width:100%;border:1px solid #EAE0D0;border-radius:12px;display:block;background:#fff">`;
+    txt.style.display = 'none';
+  }else{
+    document.getElementById('guideMedia').innerHTML =
+      `<div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div>`;
+    txt.style.display = '';
+    txt.textContent = GUIDE[state.guideStep];
+  }
+  const next = document.getElementById('guideNext');
+  next.innerHTML = (state.guideStep===GUIDE.length-1)
+    ? '<i class="ti ti-check"></i> 作り終わった → お会計へ'
+    : '<i class="ti ti-arrow-right"></i> 次へ';
+  saveProgress();
+}
+function guideNext(){
+  if(state.guideStep < GUIDE.length-1){ state.guideStep++; renderGuide(); }
+  else{ go('register'); }
+}
+function guidePrev(){
+  if(state.guideStep>0){ state.guideStep--; renderGuide(); }
+  else{ back(); }
+}
+
+/* ====== セルフレジ ====== */
+function renderRegister(){
+  document.getElementById('regPay').textContent = state.store.noCash ? 'クレジット・PayPay（現金不可）' : '現金・クレジット・PayPay';
+}
+
+/* ====== トースト ====== */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ====== 起動（前回の続きがあれば復元＝離脱→復帰しても続きから） ====== */
+renderAreaChips();
+const saved = loadProgress();
+const last = saved && saved.history && saved.history[saved.history.length-1];
+if(saved && last && last!=='line' && last!=='flower'){
+  history = saved.history;
+  Object.assign(state, saved.state);
+  onEnter(last);
+  show(last);
+  setTimeout(()=>toast('前回の続きから再開しました'), 500);
+}else{
+  show('line');
+}
 </script>
 </body>
 </html>
