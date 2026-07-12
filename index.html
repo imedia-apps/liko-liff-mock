@@ -244,8 +244,8 @@ a.cta{text-decoration:none;display:block}
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お会計</span></div>
     <div class="body">
       <div class="cap" style="text-align:center">お支払いいただける方法</div>
-      <div class="pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i><i class="ti ti-building-store"></i></div>
-      <div class="cap" style="text-align:center" id="regPay">現金・カード・PayPay・コンビニ払い</div>
+      <div class="pay"><i class="ti ti-cash"></i><i class="ti ti-credit-card"></i><i class="ti ti-wallet"></i></div>
+      <div class="cap" style="text-align:center" id="regPay">現金・カード・PayPay</div>
       <div class="photo" style="height:130px;margin-top:6px"><i class="ti ti-cash-register"></i>セルフレジへお進みください</div>
       <div class="cta spacer" onclick="go('done')">支払いを完了する</div>
     </div>
@@ -491,13 +491,13 @@ function renderFee(){
     : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
   document.getElementById('feeTitle').textContent = `${state.plan.name}　¥${state.plan.price.toLocaleString()}（税込）`;
   document.getElementById('feeTime').textContent = state.activity.time;
-  // 支払い方法（2026-07-08打ち合わせ：カード/PayPay/コンビニ払い=Stripe決済。西天満は現金不可）
+  // 支払い方法（2026-07-13確定：クレカ＋PayPay＝Stripe決済。コンビニ払いは見送り。西天満は現金不可）
   if(state.store.noCash){
-    document.getElementById('feePay').textContent = 'カード / PayPay / コンビニ払い';
+    document.getElementById('feePay').textContent = 'カード / PayPay';
     document.getElementById('feeNote').textContent = '※ この店舗は現金でのお支払いができません';
   }else{
-    document.getElementById('feePay').textContent = '現金 / カード / PayPay / コンビニ払い';
-    document.getElementById('feeNote').textContent = '※ コンビニ払いはセブン-イレブンがご利用いただけません';
+    document.getElementById('feePay').textContent = '現金 / カード / PayPay';
+    document.getElementById('feeNote').textContent = '※ カード・PayPayはその場でスマホから決済できます';
   }
 }
 
@@ -560,7 +560,7 @@ function renderReview(){
 
 /* ====== セルフレジ ====== */
 function renderRegister(){
-  document.getElementById('regPay').textContent = state.store.noCash ? 'カード・PayPay・コンビニ払い（現金不可）' : '現金・カード・PayPay・コンビニ払い';
+  document.getElementById('regPay').textContent = state.store.noCash ? 'カード・PayPay（現金不可）' : '現金・カード・PayPay';
 }
 
 /* ====== 完了（退店可能）。レビューを書いた人にはお花引換コードを表示 ====== */
