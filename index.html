@@ -99,6 +99,7 @@ body{
 
 /* CTA */
 .cta{background:var(--brown-d);color:var(--scr);text-align:center;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;flex:none;transition:transform .08s;user-select:none}
+a.cta{text-decoration:none;display:block}
 .cta:active{transform:scale(.98)}
 .cta.green{background:var(--green)}
 .cta.ghost{background:transparent;color:var(--muted);padding:9px;font-size:13px}
@@ -230,10 +231,10 @@ body{
     <div class="hdr"><i class="ti ti-brand-google back" style="color:#9A8167"></i><span class="ttl">レビューのご協力</span></div>
     <div class="body">
       <div class="cap" style="text-align:center">投稿でお花を1本プレゼント ♡</div>
-      <div class="rev"><span class="num">1</span><div>Googleマップで店舗を検索</div></div>
-      <div class="rev"><span class="num">2</span><div>お星さまを選ぶ<div class="stars">★★★★★</div></div></div>
-      <div class="rev"><span class="num">3</span><div>レビューを書いて投稿</div></div>
-      <div class="cta spacer" onclick="reviewGo()">口コミを書きにいく</div>
+      <div class="rev"><span class="num">1</span><div>Googleマップで店舗ページを開く</div></div>
+      <div class="rev"><span class="num">2</span><div>評価（星の数）を選択<div class="stars">★★★★★</div></div></div>
+      <div class="rev"><span class="num">3</span><div>口コミを入力して投稿</div></div>
+      <a class="cta spacer" id="reviewGoBtn">口コミを書きにいく</a>
       <div class="cta ghost" onclick="state.reviewed=false;go('register')">そのまま会計へ進む</div>
     </div>
   </section>
@@ -411,6 +412,7 @@ function onEnter(id){
   if(id==='plan') renderPlans();
   if(id==='fee') renderFee();
   if(id==='guide') renderGuide();
+  if(id==='review') renderReview();
   if(id==='register') renderRegister();
   if(id==='done') renderDone();
 }
@@ -531,16 +533,28 @@ function guidePrev(){
   else{ back(); }
 }
 
-/* ====== 口コミ誘導：gmap がある店舗（心斎橋エリア）は本物のGoogleマップへ、無い店舗はデモ表示 ====== */
-function reviewGo(){
-  state.reviewed = true;
+/* ====== 口コミ誘導：gmap がある店舗（心斎橋エリア）は本物のGoogleマップへ、無い店舗はデモ表示 ======
+   window.open はスマホ（Safari/LINE内ブラウザ）のポップアップブロックで開かないことがあるため、
+   本物の <a href target="_blank"> のリンクとして開く（ブロック対象外） */
+function renderReview(){
+  const a = document.getElementById('reviewGoBtn');
   if(state.store && state.store.gmap){
-    window.open(state.store.gmap, '_blank');
-    toast('Googleマップを開きました。書き終えたらこの画面に戻って会計へ♪');
-    setTimeout(()=>go('register'), 1400);
+    a.setAttribute('href', state.store.gmap);
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener');
+    a.onclick = () => {  // リンク既定動作でマップが開く。アプリ側は会計へ進めておく
+      state.reviewed = true;
+      toast('Googleマップを開きました。書き終えたらこの画面に戻って会計へ♪');
+      setTimeout(()=>go('register'), 1400);
+    };
   }else{
-    toast('Googleマップ（店舗ページ）へ移動します（デモ）');
-    setTimeout(()=>go('register'), 900);
+    a.removeAttribute('href'); a.removeAttribute('target'); a.removeAttribute('rel');
+    a.onclick = (e) => {
+      e.preventDefault();
+      state.reviewed = true;
+      toast('Googleマップ（店舗ページ）へ移動します（デモ）');
+      setTimeout(()=>go('register'), 900);
+    };
   }
 }
 
