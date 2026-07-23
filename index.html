@@ -279,16 +279,43 @@ a.cta{text-decoration:none;display:block}
    staff: 'none'=完全無人 / 'always'=常時有人 / 'weekend'=土日のみ有人
    offers: その店舗で実施できるアクティビティID（§2.6 店舗×アクティビティ マトリックス）
    ※名古屋栄は2026年8月開業のため現時点（全18店舗）には含めない */
+/* 体験ごとに plans（プラン一覧）・steps（ガイドのステップ数）・imgFamily（ガイド画像セット）を持つ。
+   plans が無い体験は DEFAULT_PLANS、steps 省略時は4。価格・構成はクライアント提供のガイド画像準拠 */
 const ACTIVITIES = [
-  {id:"snake",    name:"スネークブレスレット作り", icon:"ti-circles",   time:"約30分"},
+  {id:"snake",    name:"スネークブレスレット作り", icon:"ti-circles",   time:"約30分",
+   imgFamily:"bracelet", steps:4,
+   plans:[
+     {name:"一般プラン",       price:2500, imgKey:"ippan"},
+     {name:"学割プラン",       price:2000, imgKey:"gakusei"},
+     {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
+     {name:"パーツ20個プラン", price:1500, imgKey:"ippan"},
+   ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分"},
   {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分"},
-  {id:"chain",    name:"チェーンアクセサリー作り", icon:"ti-link",      time:"約35分"},
-  {id:"pen",      name:"カスタムボールペンづくり", icon:"ti-pencil",    time:"約20分"},
+  {id:"chain",    name:"チェーンアクセサリー作り", icon:"ti-link",      time:"約35分",
+   imgFamily:"accessory", steps:4,
+   plans:[
+     {name:"一般プラン", price:2200, imgKey:"ippan"},
+     {name:"学割プラン", price:1700, imgKey:"gakusei"},
+   ]},
+  {id:"pen",      name:"カスタムグッズづくり",     icon:"ti-pencil",    time:"約20分",
+   imgFamily:"custom", steps:3,
+   plans:[
+     {name:"カスタムグッズ", priceText:"¥1,500〜", note:"ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）"},
+   ]},
   {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分"},
   {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分"},
-  {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"約20分"},
-  {id:"glasses",  name:"カスタムメガネ",           icon:"ti-eyeglass",  time:"約30分"},
+  {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"60分〜",
+   imgFamily:"beads", steps:5,
+   plans:[
+     {name:"60分プラン",  price:1500, imgKey:"60min",  time:"60分",  note:"追加30分 ¥500"},
+     {name:"180分プラン", price:3500, imgKey:"180min", time:"180分", hot:true},
+   ]},
+  {id:"glasses",  name:"カスタムメガネ",           icon:"ti-eyeglass",  time:"約30分",
+   imgFamily:"glasses", steps:4,
+   plans:[
+     {name:"カスタムメガネ", price:3500},
+   ]},
   {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分"},
 ];
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
@@ -322,7 +349,8 @@ const STAFF_TAG = {
   weekend: {label:"土日有人", cls:"on"},
 };
 
-const PLANS = [
+/* プラン定義の無い体験用の汎用プラン（画像なし体験のデモ表示用） */
+const DEFAULT_PLANS = [
   {name:"一般プラン",       price:2500},
   {name:"学割プラン",       price:2000},
   {name:"付け放題プラン",   price:3500, hot:true},
@@ -336,18 +364,25 @@ const GUIDE = [
   "完成！サイズを確認しましょう",
 ];
 
-/* ====== 作り方ガイド画像（クライアント提供・assets/ 20枚）======
-   スネークブレスレット＝bracelet（一般/学生/つけ放題）、チェーンアクセサリー＝accessory（一般/学生）。
-   セットが無いアクティビティ・プランは従来のプレースホルダー＋テキストにフォールバック */
-const GUIDE_IMG_FAMILY = { snake:'bracelet', chain:'accessory' };
-const GUIDE_IMG_PLANS = { bracelet:['ippan','gakusei','tsukehodai'], accessory:['ippan','gakusei'] };
-const PLAN_KEY = {'一般プラン':'ippan','学割プラン':'gakusei','付け放題プラン':'tsukehodai','パーツ20個プラン':'ippan'};
-function guideImgSrc(step){  // step: 1〜4
-  const fam = GUIDE_IMG_FAMILY[state.activity && state.activity.id];
-  if(!fam) return null;
-  let key = PLAN_KEY[state.plan && state.plan.name] || 'ippan';
-  if(!GUIDE_IMG_PLANS[fam].includes(key)) key = 'ippan';
-  return `assets/${fam}_${key}_step0${step}.png`;
+const plansOf = a => (a && a.plans) || DEFAULT_PLANS;
+const stepsOf = a => (a && a.steps) || 4;
+const priceLabel = p => p.priceText || ('¥' + p.price.toLocaleString());
+
+/* ====== 作り方ガイド画像（クライアント提供・assets/ 33枚）======
+   bracelet=スネークブレスレット（プラン別3セット×4step）／accessory=チェーンアクセ（2セット×4step）／
+   beads=アイロンビーズ（step1のみ60min/180minの2種＋共通step2〜5）／glasses=メガネ4step／custom=カスタムグッズ3step。
+   セットが無い体験はプレースホルダー＋テキストにフォールバック */
+function guideImgSrc(step){  // step: 1〜stepsOf(activity)
+  const a = state.activity;
+  if(!a || !a.imgFamily || step > stepsOf(a)) return null;
+  const fam = a.imgFamily;
+  if(fam === 'beads'){
+    if(step === 1){ const k = (state.plan && state.plan.imgKey) || '60min'; return `assets/beads_${k}_step01.png`; }
+    return `assets/beads_step0${step}.png`;
+  }
+  if(fam === 'glasses' || fam === 'custom') return `assets/${fam}_step0${step}.png`;
+  const k = (state.plan && state.plan.imgKey) || 'ippan';
+  return `assets/${fam}_${k}_step0${step}.png`;
 }
 
 /* ====== 状態 ====== */
@@ -462,18 +497,20 @@ function renderWelcome(){
 }
 function selectActivity(id){ state.activity = ACT[id]; go('plan'); }
 
-/* ====== プラン選択 ====== */
+/* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
 function renderPlans(){
   document.getElementById('planActName').textContent = state.activity.name;
+  const plans = plansOf(state.activity);
   state.plan = null;
-  document.getElementById('planList').innerHTML = PLANS.map((p,i)=>
+  document.getElementById('planList').innerHTML = plans.map((p,i)=>
     `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
       ${p.hot?'<span class="badge">人気 No.1</span>':''}
-      <span class="pn">${p.name}</span><span class="price">¥${p.price.toLocaleString()}</span></div>`).join('');
-  updatePlanCta();
+      <div><div class="pn">${p.name}</div>${p.note?`<div class="cap" style="margin-top:3px">${p.note}</div>`:''}</div>
+      <span class="price" style="flex:none;margin-left:10px">${priceLabel(p)}</span></div>`).join('');
+  if(plans.length === 1){ selectPlan(0); } else { updatePlanCta(); }
 }
 function selectPlan(i){
-  state.plan = PLANS[i];
+  state.plan = plansOf(state.activity)[i];
   document.querySelectorAll('#planList .plan').forEach(el=>el.classList.toggle('sel', +el.dataset.i===i));
   updatePlanCta();
 }
@@ -489,8 +526,8 @@ function renderFee(){
   document.getElementById('feeMedia').innerHTML = src
     ? `<img src="${src}" alt="プラン説明" style="width:100%;max-height:180px;object-fit:contain;background:#fff;border:1px solid #EAE0D0;border-radius:12px;display:block">`
     : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
-  document.getElementById('feeTitle').textContent = `${state.plan.name}　¥${state.plan.price.toLocaleString()}（税込）`;
-  document.getElementById('feeTime').textContent = state.activity.time;
+  document.getElementById('feeTitle').textContent = `${state.plan.name}　${priceLabel(state.plan)}（税込）`;
+  document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
   // 支払い方法（2026-07-13確定：クレカ＋PayPay＝Stripe決済。コンビニ払いは見送り。西天満は現金不可）
   if(state.store.noCash){
     document.getElementById('feePay').textContent = 'カード / PayPay';
@@ -501,11 +538,12 @@ function renderFee(){
   }
 }
 
-/* ====== 制作ガイド ====== */
+/* ====== 制作ガイド（ステップ数は体験ごと） ====== */
 function renderGuide(){
+  const total = stepsOf(state.activity);
   document.getElementById('guideDots').innerHTML =
-    GUIDE.map((_,i)=>`<span class="dot ${i<=state.guideStep?'on':''}"></span>`).join('')
-    + `<span style="margin-left:6px">ステップ ${state.guideStep+1} / ${GUIDE.length}</span>`;
+    Array.from({length: total}, (_,i)=>`<span class="dot ${i<=state.guideStep?'on':''}"></span>`).join('')
+    + `<span style="margin-left:6px">ステップ ${state.guideStep+1} / ${total}</span>`;
   const src = guideImgSrc(state.guideStep+1);
   const txt = document.getElementById('guideText');
   if(src){
@@ -516,16 +554,16 @@ function renderGuide(){
     document.getElementById('guideMedia').innerHTML =
       `<div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div>`;
     txt.style.display = '';
-    txt.textContent = GUIDE[state.guideStep];
+    txt.textContent = GUIDE[state.guideStep] || `ステップ ${state.guideStep+1}`;
   }
   const next = document.getElementById('guideNext');
-  next.innerHTML = (state.guideStep===GUIDE.length-1)
+  next.innerHTML = (state.guideStep===total-1)
     ? '<i class="ti ti-check"></i> 作り終わった → 次へ'
     : '<i class="ti ti-arrow-right"></i> 次へ';
   saveProgress();
 }
 function guideNext(){
-  if(state.guideStep < GUIDE.length-1){ state.guideStep++; renderGuide(); }
+  if(state.guideStep < stepsOf(state.activity)-1){ state.guideStep++; renderGuide(); }
   else{ go('review'); }  // 作り終わったら口コミ誘導（会計前）→ お会計
 }
 function guidePrev(){
