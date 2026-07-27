@@ -286,8 +286,17 @@ const ACTIVITIES = [
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
      {name:"パーツ20個プラン", price:1500, imgKey:"ippan"},
    ]},
-  {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分"},
-  {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分"},
+  {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
+   imgFamily:"flower", steps:3,
+   plans:[
+     {name:"枯れないお花", priceText:"¥100〜", note:"小さいお花1個¥100・大きいお花1本¥200／ブーケ包装 無料・手提げ袋 ＋¥100"},
+   ]},
+  {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分",
+   imgFamily:"canvas", steps:5,
+   plans:[
+     {name:"一般プラン", price:4500, imgKey:"ippan",   note:"キャンバスは大・小サイズから選べます"},
+     {name:"学割プラン", price:2500, imgKey:"gakusei", note:"小サイズのみ"},
+   ]},
   {id:"chain",    name:"チェーンアクセサリー作り", icon:"ti-link",      time:"約35分",
    imgFamily:"accessory", steps:4,
    plans:[
@@ -299,7 +308,11 @@ const ACTIVITIES = [
    plans:[
      {name:"カスタムグッズ", priceText:"¥1,500〜", note:"ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）"},
    ]},
-  {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分"},
+  {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分",
+   imgFamily:"keyboard", steps:3,
+   plans:[
+     {name:"カスタムキーボード", price:500, note:"パーツ付け放題"},
+   ]},
   {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分"},
   {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"60分〜",
    imgFamily:"beads", steps:5,
@@ -312,7 +325,11 @@ const ACTIVITIES = [
    plans:[
      {name:"カスタムメガネ", price:3500},
    ]},
-  {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分"},
+  {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分",
+   imgFamily:"perfume", steps:5,
+   plans:[
+     {name:"香水作り体験", price:3500},
+   ]},
 ];
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
 
@@ -376,10 +393,13 @@ function guideImgSrc(step){  // step: 1〜stepsOf(activity)
     if(step === 1){ const k = (state.plan && state.plan.imgKey) || '60min'; return `assets/beads_${k}_step01.png`; }
     return `assets/beads_step0${step}.png`;
   }
-  if(fam === 'glasses' || fam === 'custom') return `assets/${fam}_step0${step}.png`;
-  const k = (state.plan && state.plan.imgKey) || 'ippan';
+  if(['glasses','custom','flower','keyboard','perfume'].includes(fam)) return `assets/${fam}_step0${step}.png`;
+  const k = (state.plan && state.plan.imgKey) || 'ippan';   // bracelet / accessory / canvas
   return `assets/${fam}_${k}_step0${step}.png`;
 }
+
+/* 完了画面用「完成おめでとうございます」画像（クライアント提供・SNS/LINE誘導入り） */
+const LAST_IMG = { snake:'bracelet_last', flower:'flower_last', art:'canvas_last' };
 
 /* ====== 状態 ====== */
 const state = {store:null, activity:null, plan:null, guideStep:0, reviewed:false};
@@ -603,8 +623,12 @@ function renderDone(){
     ? `<div class="cap">レビューありがとうございます！お花を1本プレゼント♡<br>スタッフ来店時にこの画面をお見せください</div>
        <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>`
     : `<div class="cap">よろしければGoogleレビューもお願いします ♡</div>`;
+  const lastKey = LAST_IMG[state.activity && state.activity.id];
+  const head = lastKey
+    ? `<img src="assets/${lastKey}.png" alt="完成おめでとうございます" style="width:100%;border:1px solid #EAE0D0;border-radius:12px;display:block;background:#fff">`
+    : `<div class="circle" style="color:var(--pink)"><i class="ti ti-confetti"></i></div>`;
   document.getElementById('doneBody').innerHTML = `
-    <div class="circle" style="color:var(--pink)"><i class="ti ti-confetti"></i></div>
+    ${head}
     <div class="sub">お会計が完了しました</div>
     <div class="cap">ご退店いただけます<br>本日はありがとうございました ♡</div>
     ${flower}`;
