@@ -184,6 +184,21 @@ a.cta{text-decoration:none;display:block}
     <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
   </section>
 
+  <!-- 3.5 スタッフ対応の体験（コインリング等）：スタッフ呼び出し画面 -->
+  <section class="screen" data-scr="staffcall">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl" id="staffcallTitle">コインリング</span></div>
+    <div class="body">
+      <div class="center" style="flex:none;margin-top:10px">
+        <div class="circle"><i class="ti ti-users"></i></div>
+        <div class="sub">スタッフと一緒におつくりいただく<br>ワークショップです</div>
+        <div class="cap">お近くのスタッフにお声がけください♪</div>
+      </div>
+      <div class="banner"><i class="ti ti-info-circle"></i><span>お近くにスタッフが見当たらないときは、下のボタンから呼び出しできます。</span></div>
+      <div class="cta spacer" onclick="callStaff()"><i class="ti ti-bell-ringing"></i> スタッフを呼び出す</div>
+      <div class="cta ghost" onclick="askLine()">LINEで連絡する（11-19時）</div>
+    </div>
+  </section>
+
   <!-- 4. プラン選択 -->
   <section class="screen" data-scr="plan">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">プランを選ぶ</span></div>
@@ -313,7 +328,8 @@ const ACTIVITIES = [
    plans:[
      {name:"カスタムキーボード", price:500, note:"パーツ付け放題"},
    ]},
-  {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分"},
+  {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分・スタッフと一緒に",
+   staffOnly:true},
   {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"60分〜",
    imgFamily:"beads", steps:5,
    plans:[
@@ -511,7 +527,18 @@ function renderWelcome(){
       <div class="grow"><div class="nm">${a.name}</div><div class="meta">${a.time}</div></div>
       <i class="ti ti-chevron-right ic"></i></div>`).join('');
 }
-function selectActivity(id){ state.activity = ACT[id]; go('plan'); }
+function selectActivity(id){
+  state.activity = ACT[id];
+  if(state.activity.staffOnly){  // コインリング等＝スタッフと作る体験（2026-07-24クライアント要望）
+    document.getElementById('staffcallTitle').textContent = state.activity.name;
+    go('staffcall');
+  }else{
+    go('plan');
+  }
+}
+function callStaff(){
+  toast('スタッフを呼び出しました。その場で少々お待ちください♪（デモ）');
+}
 
 /* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
 function renderPlans(){
