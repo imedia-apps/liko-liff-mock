@@ -289,7 +289,7 @@ a.cta{text-decoration:none;display:block}
 /* ====== 実データ（要件定義書 元依頼PDF §2.3〜2.6 準拠。本番はスプレッドシート／簡易DBから読み込む想定） ======
    staff: 'none'=完全無人 / 'always'=常時有人 / 'weekend'=土日のみ有人
    offers: その店舗で実施できるアクティビティID（§2.6 店舗×アクティビティ マトリックス）
-   ※名古屋栄は2026年8月開業のため現時点（全18店舗）には含めない */
+   ※2026-07-31更新：名古屋栄（8月開業・§2.6準拠）と名古屋（要件定義書に無い新店舗・体験は仮設定）を追加＝全20店舗 */
 /* 体験ごとに plans（プラン一覧）・steps（ガイドのステップ数）・imgFamily（ガイド画像セット）を持つ。
    plans が無い体験は DEFAULT_PLANS、steps 省略時は4。価格・構成はクライアント提供のガイド画像準拠 */
 const ACTIVITIES = [
@@ -374,6 +374,10 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+祇園店")},
   {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["snake","pen"],
    gmap:GM("キャンバスアートリコ+名古屋駅前店")},
+  {name:"名古屋",           area:"愛知", staff:"none",    offers:["snake","flower"],   // 要件定義書に無い新店舗＝体験は仮設定・クライアント確認中
+   gmap:GM("キャンバスアートリコ+名古屋店")},
+  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["snake","flower"],   // 2026年8月開業（要件定義書§2.6準拠：スネーク・お花）
+   gmap:GM("キャンバスアートリコ+名古屋栄店")},
   {name:"浅草",             area:"東京", staff:"weekend", offers:["snake","flower"],
    gmap:GM("キャンバスアートリコ+浅草店")},
   {name:"浅草2号店",        area:"東京", staff:"none",    offers:["snake","flower"],
