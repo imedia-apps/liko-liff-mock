@@ -299,7 +299,7 @@ const ACTIVITIES = [
      {name:"一般プラン",       price:2500, imgKey:"ippan"},
      {name:"学割プラン",       price:2000, imgKey:"gakusei"},
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
-     {name:"パーツ20個プラン", price:1500, imgKey:"ippan"},
+     {name:"パーツのみ購入",   price:1500, imgKey:"ippan", feeImg:"parts_only", note:"お好きなパーツを20個（数個での購入は不可）"},
    ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
    imgFamily:"flower", steps:3,
@@ -346,55 +346,63 @@ const ACTIVITIES = [
    plans:[
      {name:"香水作り体験", price:3500},
    ]},
+  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"8月オープン",
+   plans:[
+     {name:"お清めスプレー作り", priceText:"準備中", note:"南堀江店（8月オープン）の新体験・詳細は準備中です"},
+   ]},
 ];
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
 
-/* gmap＝口コミボタンの遷移先（Googleマップの実在店舗ページ・2026-07-31に全店舗実機調査）。
-   表参道原宿のみGoogle掲載が見つからずgmap無し＝デモ表示。
-   ※渋谷609=Liko渋谷店／渋谷305=渋谷2号店／横浜2号店=横浜駅前店 は推定対応（クライアント要確認） */
+/* 店舗×体験はクライアント提供の最新版（2026-07-31 LINE回答）＝全21店舗。
+   gmap＝口コミボタンの遷移先（Googleマップ実在店舗ページ・実機調査＋クライアント確認済み）。
+   渋谷=Liko渋谷店／渋谷2号=渋谷2号店／横浜駅前=横浜駅前店／表参道原宿=「4to&Liko」（クライアント提供の短縮リンク）。
+   南堀江（8月）・奈良（9/1）は開業前のためgmap未設定 */
 const GM = q => "https://www.google.com/maps/search/?api=1&query=" + q;
 const STORES = [
-  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","ring","beads","glasses","perfume"],
-   gmap:GM("Liko+大阪心斎橋店")},
-  {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"], nakazakiNote:true,
-   gmap:GM("キャンバスアートリコ+大阪天満店")},
-  {name:"中崎町",           area:"大阪", staff:"always",  offers:["snake","flower"], walk:"予約不要",
+  {name:"中崎町",           area:"大阪", staff:"always",  offers:["flower","snake"], walk:"予約不要",
    gmap:GM("キャンバスアートリコ+中崎町店")},
-  {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["snake","flower"],
-   gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
-  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["snake","flower"],
-   gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
-  {name:"西天満",           area:"大阪", staff:"none",    offers:["snake","flower"], noCash:true,
+  {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"],
+   note:"スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。",
+   gmap:GM("キャンバスアートリコ+大阪天満店")},
+  {name:"西天満",           area:"大阪", staff:"none",    offers:["flower","snake"], noCash:true,
    gmap:GM("キャンバスアートリコ+西天満店")},
+  {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
+  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","perfume","glasses","beads","ring"],
+   gmap:GM("Liko+大阪心斎橋店")},
+  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
+  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray"], walk:"8月オープン"},
+  {name:"奈良",             area:"奈良", staff:"none",    offers:["flower","snake","beads"], walk:"9月1日オープン"},
   {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"],
    gmap:GM("キャンバスアートリコ+神戸元町店")},
-  {name:"京都",             area:"京都", staff:"always",  offers:["flower","art","chain"],
+  {name:"京都",             area:"京都", staff:"always",  offers:["chain","flower","art"],
    gmap:GM("キャンバスアートリコ+京都店")},
-  {name:"祇園",             area:"京都", staff:"none",    offers:["snake","flower","pen"],
+  {name:"祇園",             area:"京都", staff:"none",    offers:["flower","snake","pen"],
    gmap:GM("キャンバスアートリコ+祇園店")},
-  {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["snake","pen"],
-   gmap:GM("キャンバスアートリコ+名古屋駅前店")},
-  {name:"名古屋",           area:"愛知", staff:"none",    offers:["snake","flower"],   // 要件定義書に無い新店舗＝体験は仮設定・クライアント確認中
-   gmap:GM("キャンバスアートリコ+名古屋店")},
-  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["snake","flower"],   // 2026年8月開業（要件定義書§2.6準拠：スネーク・お花）
-   gmap:GM("キャンバスアートリコ+名古屋栄店")},
-  {name:"浅草",             area:"東京", staff:"weekend", offers:["snake","flower"],
-   gmap:GM("キャンバスアートリコ+浅草店")},
-  {name:"浅草2号店",        area:"東京", staff:"none",    offers:["snake","flower"],
-   gmap:GM("キャンバスアートリコ+浅草2号店")},
-  {name:"渋谷609",          area:"東京", staff:"none",    offers:["snake"],
+  {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"],
    gmap:GM("Liko渋谷店")},
-  {name:"渋谷305",          area:"東京", staff:"none",    offers:["snake"],
+  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"],
    gmap:GM("キャンバスアートリコ+渋谷2号店")},
-  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["snake","flower"]},
-  {name:"池袋",             area:"東京", staff:"weekend", offers:["snake","flower","art"],
+  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+名古屋栄店")},
+  {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["flower","snake","beads"],
+   gmap:GM("キャンバスアートリコ+名古屋駅前店")},
+  {name:"池袋",             area:"東京", staff:"weekend", offers:["flower","snake","art"],
    gmap:GM("Liko+池袋店")},
-  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["snake","flower","pen"],
-   gmap:GM("キャンバスアートリコ+横浜中華街店")},
-  {name:"横浜2号店",        area:"横浜", staff:"none",    offers:["snake","flower"],
+  {name:"浅草",             area:"東京", staff:"weekend", offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+浅草店")},
+  {name:"浅草2号",          area:"東京", staff:"none",    offers:["snake"],
+   gmap:GM("キャンバスアートリコ+浅草2号店")},
+  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["flower","snake"],
+   note:"スネークブレスレットは、ネックレスとしての作成もできます♪",
+   gmap:"https://maps.app.goo.gl/iibLvEXZxZsnuKaq9"},
+  {name:"横浜駅前",         area:"横浜", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+横浜駅前店")},
+  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["flower","snake","pen"],
+   gmap:GM("キャンバスアートリコ+横浜中華街店")},
 ];
-const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知"];
+const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知","奈良"];
 const STAFF_TAG = {
   none:    {label:"無人",     cls:""},
   always:  {label:"有人",     cls:"on"},
@@ -541,8 +549,8 @@ function renderWelcome(){
   document.getElementById('welcomeMsg').innerHTML = `${state.store.name}店へようこそ <span style="color:var(--pink)">♡</span>`;
   // その店舗で実施できる体験のみ表示（要件4.3）
   const list = state.store.offers.map(id=>ACT[id]).filter(Boolean);
-  const note = state.store.nakazakiNote
-    ? `<div class="banner"><i class="ti ti-info-circle"></i><span>スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。</span></div>`
+  const note = state.store.note
+    ? `<div class="banner"><i class="ti ti-info-circle"></i><span>${state.store.note}</span></div>`
     : '';
   document.getElementById('actList').innerHTML = note + list.map(a=>
     `<div class="card" onclick="selectActivity('${a.id}')">
@@ -563,12 +571,18 @@ function callStaff(){
   toast('スタッフを呼び出しました。その場で少々お待ちください♪（デモ）');
 }
 
+/* 体験選択直後に見せる完成品イメージ（クライアント提供「○○最初」画像・intro_<id>.png） */
+const INTRO_IMG = new Set(['snake','chain','beads','glasses','pen','flower','art','keyboard','perfume','spray']);
+
 /* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
 function renderPlans(){
   document.getElementById('planActName').textContent = state.activity.name;
   const plans = plansOf(state.activity);
   state.plan = null;
-  document.getElementById('planList').innerHTML = plans.map((p,i)=>
+  const hero = INTRO_IMG.has(state.activity.id)
+    ? `<img src="assets/intro_${state.activity.id}.png" alt="${state.activity.name}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block;margin-bottom:2px">`
+    : '';
+  document.getElementById('planList').innerHTML = hero + plans.map((p,i)=>
     `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
       ${p.hot?'<span class="badge">人気 No.1</span>':''}
       <div><div class="pn">${p.name}</div>${p.note?`<div class="cap" style="margin-top:3px">${p.note}</div>`:''}</div>
@@ -588,11 +602,15 @@ function updatePlanCta(){
 
 /* ====== 料金・同意 ====== */
 function renderFee(){
-  const src = guideImgSrc(1);
+  // プラン専用の説明カードがあれば優先（例：パーツのみ購入＝parts_only.png）
+  const src = (state.plan && state.plan.feeImg)
+    ? `assets/${state.plan.feeImg}.png`
+    : guideImgSrc(1);
   document.getElementById('feeMedia').innerHTML = src
     ? `<img src="${src}" alt="プラン説明" style="width:100%;max-height:180px;object-fit:contain;background:#fff;border:1px solid #EAE0D0;border-radius:12px;display:block">`
     : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
-  document.getElementById('feeTitle').textContent = `${state.plan.name}　${priceLabel(state.plan)}（税込）`;
+  document.getElementById('feeTitle').textContent =
+    `${state.plan.name}　${priceLabel(state.plan)}` + (state.plan.price ? '（税込）' : '');
   document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
   // 支払い方法（2026-07-13確定：クレカ＋PayPay＝Stripe決済。コンビニ払いは見送り。西天満は現金不可）
   if(state.store.noCash){
