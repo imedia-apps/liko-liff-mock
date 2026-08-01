@@ -298,12 +298,12 @@ const ACTIVITIES = [
      {name:"一般プラン",       price:2500, imgKey:"ippan"},
      {name:"学割プラン",       price:2000, imgKey:"gakusei"},
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
-     {name:"パーツのみ購入",   price:1500, imgKey:"ippan", feeImg:"parts_only", note:"お好きなパーツを20個（数個での購入は不可）"},
+     {name:"パーツのみ購入",   price:1500, imgKey:"ippan", note:"お好きなパーツを20個"},
    ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
    imgFamily:"flower", steps:3,
    plans:[
-     {name:"枯れないお花", priceText:"¥100〜", note:"小さいお花1個¥100・大きいお花1本¥200／ブーケ包装 無料・手提げ袋 ＋¥100"},
+     {name:"一般プラン", priceText:"¥100〜", note:"小さいお花1個¥100・大きいお花1本¥200／ブーケ包装 無料・手提げ袋 ＋¥100"},
    ]},
   {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分",
    imgFamily:"canvas", steps:5,
@@ -320,12 +320,12 @@ const ACTIVITIES = [
   {id:"pen",      name:"カスタムグッズづくり",     icon:"ti-pencil",    time:"約20分",
    imgFamily:"custom", steps:3,
    plans:[
-     {name:"カスタムグッズ", priceText:"¥1,500〜", note:"ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）"},
+     {name:"一般プラン", priceText:"¥1,500〜", note:"ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）"},
    ]},
   {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分",
    imgFamily:"keyboard", steps:3,
    plans:[
-     {name:"カスタムキーボード", price:500, note:"パーツ付け放題"},
+     {name:"一般プラン", price:500, note:"パーツ付け放題"},
    ]},
   {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分・スタッフと一緒に",
    staffOnly:true},
@@ -338,16 +338,16 @@ const ACTIVITIES = [
   {id:"glasses",  name:"カスタムメガネ",           icon:"ti-eyeglass",  time:"約30分",
    imgFamily:"glasses", steps:4,
    plans:[
-     {name:"カスタムメガネ", price:3500},
+     {name:"一般プラン", price:3500},
    ]},
   {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分",
    imgFamily:"perfume", steps:5,
    plans:[
-     {name:"香水作り体験", price:3500},
+     {name:"一般プラン", price:3500},
    ]},
   {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"8月オープン",
    plans:[
-     {name:"お清めスプレー作り", priceText:"準備中", note:"南堀江店（8月オープン）の新体験・詳細は準備中です"},
+     {name:"一般プラン", priceText:"準備中", note:"南堀江店（8月オープン）の新体験・詳細は準備中です"},
    ]},
 ];
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
