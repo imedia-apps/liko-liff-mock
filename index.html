@@ -580,7 +580,7 @@ function renderPlans(){
   const plans = plansOf(state.activity);
   state.plan = null;
   const hero = INTRO_IMG.has(state.activity.id)
-    ? `<img src="assets/intro_${state.activity.id}.png" alt="${state.activity.name}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block;margin-bottom:2px">`
+    ? `<img src="assets/intro_${state.activity.id}.png" alt="${state.activity.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block;margin-bottom:2px">`
     : '';
   document.getElementById('planList').innerHTML = hero + plans.map((p,i)=>
     `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
