@@ -203,7 +203,6 @@ a.cta{text-decoration:none;display:block}
   <section class="screen" data-scr="plan">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">プランを選ぶ</span></div>
     <div class="body">
-      <div class="cap" id="planActName"></div>
       <div id="planList" style="display:flex;flex-direction:column;gap:9px"></div>
       <div class="cta spacer disabled" id="planCta" onclick="go('fee')">プランを選んでください</div>
     </div>
@@ -576,13 +575,18 @@ const INTRO_IMG = new Set(['snake','chain','beads','glasses','pen','flower','art
 
 /* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
 function renderPlans(){
-  document.getElementById('planActName').textContent = state.activity.name;
-  const plans = plansOf(state.activity);
+  const a = state.activity;
+  const plans = plansOf(a);
   state.plan = null;
-  const hero = INTRO_IMG.has(state.activity.id)
-    ? `<img src="assets/intro_${state.activity.id}.png" alt="${state.activity.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block;margin-bottom:2px">`
+  const hero = INTRO_IMG.has(a.id)
+    ? `<img src="assets/intro_${a.id}.png" alt="${a.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block">`
     : '';
-  document.getElementById('planList').innerHTML = hero + plans.map((p,i)=>
+  // 体験名は画像の下にタイトル表示（2026-08-01 今枝指示：キャプションだと見にくい）
+  const title = `<div style="text-align:center;margin:2px 0 4px">
+      <div style="font-family:var(--font-serif);font-size:17px;color:var(--brown-d);letter-spacing:.03em">${a.name}</div>
+      ${a.time ? `<div class="cap" style="margin-top:2px">${a.time}</div>` : ''}
+    </div>`;
+  document.getElementById('planList').innerHTML = hero + title + plans.map((p,i)=>
     `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
       ${p.hot?'<span class="badge">人気 No.1</span>':''}
       <div><div class="pn">${p.name}</div>${p.note?`<div class="cap" style="margin-top:3px">${p.note}</div>`:''}</div>
