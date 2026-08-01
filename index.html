@@ -606,15 +606,18 @@ function updatePlanCta(){
 
 /* ====== 料金・同意 ====== */
 function renderFee(){
-  // プラン専用の説明カードがあれば優先（例：パーツのみ購入＝parts_only.png）
-  const src = (state.plan && state.plan.feeImg)
-    ? `assets/${state.plan.feeImg}.png`
-    : guideImgSrc(1);
-  document.getElementById('feeMedia').innerHTML = src
-    ? `<img src="${src}" alt="プラン説明" style="width:100%;max-height:180px;object-fit:contain;background:#fff;border:1px solid #EAE0D0;border-radius:12px;display:block">`
-    : `<div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div>`;
-  document.getElementById('feeTitle').textContent =
-    `${state.plan.name}　${priceLabel(state.plan)}` + (state.plan.price ? '（税込）' : '');
+  // 料金はシンプルな料金パネルで表示（2026-08-01 今枝指示：STEP画像の流用は情報過多で見にくい）
+  const p = state.plan, a = state.activity;
+  document.getElementById('feeMedia').innerHTML = `
+    <div style="background:#fff;border:1px solid #EAE0D0;border-radius:14px;padding:24px 16px 20px;text-align:center">
+      <div style="font-size:10px;letter-spacing:.3em;color:var(--pink)">PRICE</div>
+      <div style="font-family:var(--font-serif);font-size:16px;color:var(--brown-d);margin-top:10px">${a.name}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px">${p.name}</div>
+      <div style="width:34px;height:1px;background:var(--line);margin:12px auto"></div>
+      <div style="font-family:var(--font-serif);font-size:34px;color:var(--brown);line-height:1">${priceLabel(p)}<span style="font-size:12px;color:var(--muted);margin-left:4px">${p.price ? '（税込）' : ''}</span></div>
+      ${p.note ? `<div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7">${p.note}</div>` : ''}
+    </div>`;
+  document.getElementById('feeTitle').style.display = 'none';
   document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
   // 支払い方法（2026-07-13確定：クレカ＋PayPay＝Stripe決済。コンビニ払いは見送り。西天満は現金不可）
   if(state.store.noCash){
