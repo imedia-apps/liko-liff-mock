@@ -296,7 +296,11 @@ const ACTIVITIES = [
      {name:"一般プラン",       price:2500, imgKey:"ippan"},
      {name:"学割プラン",       price:2000, imgKey:"gakusei"},
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
-     {name:"パーツのみ購入",   price:1500, imgKey:"ippan", note:"お好きなパーツを20個"},
+   ]},
+  {id:"parts",    name:"パーツのみ購入",           icon:"ti-diamond",   time:"20個 ¥1,500",
+   skipGuide:true,   // 作り方ガイド無し＝料金確認からお会計へ直行
+   plans:[
+     {name:"一般プラン", price:1500, note:"お好きなパーツを20個お選びいただけます"},
    ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
    imgFamily:"flower", steps:3,
@@ -511,7 +515,10 @@ function onEnter(id){
   if(id==='register') renderRegister();
   if(id==='done') renderDone();
 }
-function startGuide(){ state.guideStep=0; go('guide'); }
+function startGuide(){
+  if(state.activity && state.activity.skipGuide){ go('review'); return; }  // パーツのみ購入等＝ガイド無しでお会計へ
+  state.guideStep=0; go('guide');
+}
 
 /* ====== 店舗選択 ====== */
 let activeArea = "すべて";
@@ -545,7 +552,9 @@ function selectStore(name){ state.store = STORES.find(s=>s.name===name); go('wel
 function renderWelcome(){
   document.getElementById('welcomeMsg').innerHTML = `${state.store.name}店へようこそ <span style="color:var(--pink)">♡</span>`;
   // その店舗で実施できる体験のみ表示（要件4.3）
-  const list = state.store.offers.map(id=>ACT[id]).filter(Boolean);
+  // パーツのみ購入はブレスレット用パーツのため、スネーク実施店舗すべてに表示（クライアント要確認）
+  const offerIds = [...state.store.offers, ...(state.store.offers.includes('snake') ? ['parts'] : [])];
+  const list = offerIds.map(id=>ACT[id]).filter(Boolean);
   const note = state.store.note
     ? `<div class="banner"><i class="ti ti-info-circle"></i><span>${state.store.note}</span></div>`
     : '';
@@ -569,7 +578,7 @@ function callStaff(){
 }
 
 /* 体験選択直後に見せる完成品イメージ（クライアント提供「○○最初」画像・intro_<id>.png） */
-const INTRO_IMG = new Set(['snake','chain','beads','glasses','pen','flower','art','keyboard','perfume','spray']);
+const INTRO_IMG = new Set(['snake','chain','beads','glasses','pen','flower','art','keyboard','perfume','spray','parts']);
 
 /* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
 function renderPlans(){
