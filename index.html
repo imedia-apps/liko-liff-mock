@@ -294,7 +294,8 @@ const ACTIVITIES = [
      {name:"一般プラン",       price:2500, imgKey:"ippan"},
      {name:"学割プラン",       price:2000, imgKey:"gakusei"},
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
-     {name:"パーツのみ購入",   price:1500, imgKey:"ippan", note:"お好きなパーツを20個お選びいただけます"},
+     {name:"パーツのみ購入",   price:1500, note:"お好きなパーツを20個お選びいただけます",
+      guideImgs:["parts_only"]},   // ガイド＝クライアント製「パーツのみの購入」1枚絵
    ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
    imgFamily:"flower", steps:3,
@@ -321,7 +322,10 @@ const ACTIVITIES = [
   {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分",
    imgFamily:"keyboard", steps:3,
    plans:[
-     {name:"一般プラン", price:500, note:"パーツ付け放題"},
+     {name:"1個プラン", price:500,  note:"パーツ付け放題",
+      guideImgs:["keyboard1_step01","keyboard_step02","keyboard1_step03"]},
+     {name:"4個プラン", price:1500, note:"パーツ付け放題",
+      guideImgs:["keyboard4_step01","keyboard_step02","keyboard4_step03"]},
    ]},
   {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分・スタッフと一緒に",
    staffOnly:true},
@@ -335,6 +339,8 @@ const ACTIVITIES = [
    imgFamily:"glasses", steps:4,
    plans:[
      {name:"一般プラン", price:3500},
+     {name:"お持ち込みメガネ・サングラス", price:1500, note:"お持ち込みのメガネ・サングラスをカスタムできます",
+      guideImgs:["glasses_bring_step01","glasses_bring_step02","glasses_bring_step03"]},
    ]},
   {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分",
    imgFamily:"perfume", steps:5,
@@ -377,7 +383,7 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+祇園店")},
   {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"],
    gmap:GM("Liko渋谷店")},
-  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"],
+  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true,
    gmap:GM("キャンバスアートリコ+渋谷2号店")},
   {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+名古屋栄店")},
@@ -427,7 +433,18 @@ const priceLabel = p => p.priceText || ('¥' + p.price.toLocaleString());
    bracelet=スネークブレスレット（プラン別3セット×4step）／accessory=チェーンアクセ（2セット×4step）／
    beads=アイロンビーズ（step1のみ60min/180minの2種＋共通step2〜5）／glasses=メガネ4step／custom=カスタムグッズ3step。
    セットが無い体験はプレースホルダー＋テキストにフォールバック */
-function guideImgSrc(step){  // step: 1〜stepsOf(activity)
+/* ガイドの総ステップ数：プランが専用画像リスト（guideImgs）を持つ場合はその枚数が優先 */
+function guideTotal(){
+  if(state.plan && state.plan.guideImgs) return state.plan.guideImgs.length;
+  return stepsOf(state.activity);
+}
+
+function guideImgSrc(step){  // step: 1〜guideTotal()
+  // プラン専用のガイド画像（例：パーツのみ購入＝1枚絵／キーボード1個・4個／持ち込みメガネ）
+  if(state.plan && state.plan.guideImgs){
+    const n = state.plan.guideImgs[step-1];
+    return n ? `assets/${n}.png` : null;
+  }
   const a = state.activity;
   if(!a || !a.imgFamily || step > stepsOf(a)) return null;
   const fam = a.imgFamily;
@@ -633,7 +650,7 @@ function renderFee(){
 
 /* ====== 制作ガイド（ステップ数は体験ごと） ====== */
 function renderGuide(){
-  const total = stepsOf(state.activity);
+  const total = guideTotal();
   document.getElementById('guideDots').innerHTML =
     Array.from({length: total}, (_,i)=>`<span class="dot ${i<=state.guideStep?'on':''}"></span>`).join('')
     + `<span style="margin-left:6px">ステップ ${state.guideStep+1} / ${total}</span>`;
@@ -656,7 +673,7 @@ function renderGuide(){
   saveProgress();
 }
 function guideNext(){
-  if(state.guideStep < stepsOf(state.activity)-1){ state.guideStep++; renderGuide(); }
+  if(state.guideStep < guideTotal()-1){ state.guideStep++; renderGuide(); }
   else{ go('review'); }  // 作り終わったら口コミ誘導（会計前）→ お会計
 }
 function guidePrev(){
