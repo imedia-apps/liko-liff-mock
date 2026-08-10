@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>キャンバスアート Liko｜LINE接客デモ</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
 :root{
   --beige:#F5EFE6; --brown:#8B6F47; --brown-d:#6B5544; --pink:#D4A5A5;
@@ -281,6 +282,16 @@ a.cta{text-decoration:none;display:block}
 </div>
 
 <script>
+/* ====== LIFF連携（2026-08-10発行・iMediaサービスメニューチャネル内「Liko 体験アプリ」） ======
+   LIFF URL: https://liff.line.me/2010583280-tXz1kN4D
+   通常ブラウザで開いた場合は init が失敗しても何も起きない（そのままWebアプリとして動く） */
+const LIFF_ID = '2010583280-tXz1kN4D';
+if (window.liff) {
+  liff.init({ liffId: LIFF_ID })
+    .then(() => console.log('LIFF init OK. inClient=', liff.isInClient()))
+    .catch(err => console.warn('LIFF init失敗（通常ブラウザでは無視してOK）:', err));
+}
+
 /* ====== 実データ（要件定義書 元依頼PDF §2.3〜2.6 準拠。本番はスプレッドシート／簡易DBから読み込む想定） ======
    staff: 'none'=完全無人 / 'always'=常時有人 / 'weekend'=土日のみ有人
    offers: その店舗で実施できるアクティビティID（§2.6 店舗×アクティビティ マトリックス）
