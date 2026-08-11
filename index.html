@@ -171,7 +171,7 @@ a.cta{text-decoration:none;display:block}
 
   <!-- 3. ウェルカム（体験選択） -->
   <section class="screen" data-scr="welcome">
-    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="brand" id="welcomeBrand">Liko<small>CANVAS ART</small></span></div>
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">体験を選ぶ</span></div>
     <div class="body">
       <div class="sub" style="text-align:center" id="welcomeMsg">ようこそ ♡</div>
       <div class="cap" style="text-align:center;margin-bottom:2px">体験メニューを選んでください</div>
@@ -500,7 +500,7 @@ function restart(){
 }
 
 /* ====== LINEで質問（お客様が自分で入力。文脈は自動で添付。本番は liff.sendMessages で画面を離れず送信） ====== */
-function askLine(){
+function askContext(){
   const cur = history[history.length-1];
   let ctx = '';
   if(state.store){
@@ -508,6 +508,10 @@ function askLine(){
     if(cur==='guide' && state.activity) ctx += `・${state.activity.name}・ステップ${state.guideStep+1}`;
     else if(state.activity) ctx += `・${state.activity.name}`;
   }
+  return ctx;
+}
+function askLine(){
+  const ctx = askContext();
   const ctxEl = document.getElementById('askCtx');
   if(ctx){
     ctxEl.innerHTML = `<i class="ti ti-info-circle"></i><span>「${ctx}」の情報も一緒に届くので、状況をイチから説明しなくて大丈夫です</span>`;
@@ -518,8 +522,22 @@ function askLine(){
 }
 function closeAsk(){ document.getElementById('sheetMask').classList.remove('show'); }
 function sendAsk(){
+  const text = document.getElementById('askText').value.trim();
+  const ctx = askContext();
   closeAsk();
-  toast('質問を送りました。返信はLINEのトーク画面に届きます（この画面はそのまま残ります）');
+  // LINE内で開いている場合は本当にトークへ送信（liff.sendMessages・要chat_message.writeスコープ）
+  // 開いたトーク（＝liko公式LINEとのトーク）にユーザーの発言として投稿される
+  if(window.liff && liff.isInClient && liff.isInClient()){
+    const body = (text || '（お問い合わせ）') + (ctx ? `\n―――\n📍 ${ctx}` : '');
+    liff.sendMessages([{ type:'text', text: body }])
+      .then(()=> toast('質問を送りました。返信はこのトーク画面に届きます'))
+      .catch(err => {
+        console.warn('sendMessages失敗:', err);
+        toast('送信できませんでした。お手数ですがトーク画面から直接メッセージをお送りください');
+      });
+  }else{
+    toast('質問を送りました。返信はLINEのトーク画面に届きます（この画面はそのまま残ります）');
+  }
 }
 
 /* 画面ごとの初期化 */
