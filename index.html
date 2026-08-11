@@ -306,7 +306,7 @@ const ACTIVITIES = [
      {name:"学割プラン",       price:2000, imgKey:"gakusei"},
      {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
      {name:"パーツのみ購入",   price:1500, note:"お好きなパーツを20個お選びいただけます",
-      guideImgs:["parts_only"]},   // ガイド＝クライアント製「パーツのみの購入」1枚絵
+      guideImgs:["parts_only"], lastLabel:"選び終わった → 次へ"},   // ガイド＝クライアント製「パーツのみの購入」1枚絵
    ]},
   {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
    imgFamily:"flower", steps:3,
@@ -359,6 +359,7 @@ const ACTIVITIES = [
      {name:"一般プラン", price:3500},
    ]},
   {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"8月オープン",
+   steps:1, guideTexts:["作り方ガイドは準備中です。オープンをお楽しみに♪"],
    plans:[
      {name:"一般プラン", priceText:"準備中", note:"南堀江店（8月オープン）の新体験・詳細は準備中です"},
    ]},
@@ -476,7 +477,7 @@ const state = {store:null, activity:null, plan:null, guideStep:0, reviewed:false
 let history = ["line"];
 
 /* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
-const LS_KEY = 'liko_demo_progress';
+const LS_KEY = 'liko_demo_progress_v2';  // 店舗改名(2026-08)以前の旧キャッシュを無効化するためv2
 function saveProgress(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify({history, state})); }catch(e){}
 }
@@ -675,11 +676,11 @@ function renderGuide(){
     document.getElementById('guideMedia').innerHTML =
       `<div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div>`;
     txt.style.display = '';
-    txt.textContent = GUIDE[state.guideStep] || `ステップ ${state.guideStep+1}`;
+    txt.textContent = (state.activity.guideTexts || GUIDE)[state.guideStep] || `ステップ ${state.guideStep+1}`;
   }
   const next = document.getElementById('guideNext');
   next.innerHTML = (state.guideStep===total-1)
-    ? '<i class="ti ti-check"></i> 作り終わった → 次へ'
+    ? '<i class="ti ti-check"></i> ' + ((state.plan && state.plan.lastLabel) || '作り終わった → 次へ')
     : '<i class="ti ti-arrow-right"></i> 次へ';
   saveProgress();
 }
