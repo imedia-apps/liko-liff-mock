@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>キャンバスアート Liko｜LINE接客デモ</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -29,7 +29,11 @@ body{
   box-shadow:0 12px 40px rgba(80,60,40,.22);
   display:flex;flex-direction:column;
 }
-@media (max-width:430px){ .app{max-height:none;box-shadow:none} }
+@media (max-width:430px){
+  body{background:var(--scr)}                       /* 万一の隙間もアプリ背景色と同化させる */
+  .app{max-height:none;box-shadow:none;
+       padding-bottom:env(safe-area-inset-bottom)}  /* iPhoneホームバー領域まで背景を延ばし、中身はその上に載せる */
+}
 
 /* 画面切替 */
 .screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--scr);
