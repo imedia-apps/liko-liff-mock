@@ -564,13 +564,12 @@ function renderStores(){
   });
   document.getElementById('storeCount').textContent = `${list.length}店舗`;
   document.getElementById('storeList').innerHTML = list.map(s=>{
-    const t = STAFF_TAG[s.staff];
-    const badge = `<span class="tag ${t.cls}">${t.label}</span>`;
+    /* 無人/有人バッジは非表示（2026-08-12クライアント要望）。STAFF_TAGとstaffデータは温存 */
     const meta = [s.area+"エリア", s.walk].filter(Boolean).join('・');
     return `<div class="card" onclick="selectStore('${s.name}')">
       <i class="ti ti-map-pin ic"></i>
       <div class="grow"><div class="nm">${s.name}</div><div class="meta">${meta}</div></div>
-      ${badge}</div>`;
+      </div>`;
   }).join('') || `<div class="cap" style="text-align:center;padding:20px">該当する店舗がありません</div>`;
 }
 function selectStore(name){ state.store = STORES.find(s=>s.name===name); go('welcome'); }
