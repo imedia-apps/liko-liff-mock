@@ -379,9 +379,9 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+京都店")},
   {name:"祇園",             area:"京都", staff:"none",    offers:["flower","snake","pen"],
    gmap:GM("キャンバスアートリコ+祇園店")},
-  {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"],
+  {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"], noFlower:true,
    gmap:GM("Liko渋谷店")},
-  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true,
+  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true, noFlower:true,
    gmap:GM("キャンバスアートリコ+渋谷2号店")},
   {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+名古屋栄店")},
@@ -391,7 +391,7 @@ const STORES = [
    gmap:GM("Liko+池袋店")},
   {name:"浅草",             area:"東京", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+浅草店")},
-  {name:"浅草2号",          area:"東京", staff:"always",  offers:["snake"],
+  {name:"浅草2号",          area:"東京", staff:"always",  offers:["snake"], noFlower:true,
    gmap:GM("キャンバスアートリコ+浅草2号店")},
   {name:"表参道原宿",       area:"東京", staff:"always",  offers:["flower","snake"],
    note:"スネークネックレスを作成される方は、スネークブレスレットをお選びください♪",
@@ -542,8 +542,13 @@ function onEnter(id){
   if(id==='register') renderRegister();
   if(id==='done') renderDone();
 }
+function goReview(){
+  /* お花なし店舗（渋谷3F/6F・浅草2号＝2026-08-14クライアント要望）は口コミ→お花画面を飛ばしてセルフレジへ直行 */
+  if(state.store && state.store.noFlower){ state.reviewed=false; go('register'); return; }
+  go('review');
+}
 function startGuide(){
-  if(state.activity && state.activity.skipGuide){ go('review'); return; }  // パーツのみ購入等＝ガイド無しでお会計へ
+  if(state.activity && state.activity.skipGuide){ goReview(); return; }  // パーツのみ購入等＝ガイド無しでお会計へ
   state.guideStep=0; go('guide');
 }
 
@@ -690,7 +695,7 @@ function renderGuide(){
 }
 function guideNext(){
   if(state.guideStep < guideTotal()-1){ state.guideStep++; renderGuide(); }
-  else{ go('review'); }  // 作り終わったら口コミ誘導（会計前）→ お会計
+  else{ goReview(); }  // 作り終わったら口コミ誘導（会計前）→ お会計（お花なし店舗はセルフレジ直行）
 }
 function guidePrev(){
   if(state.guideStep>0){ state.guideStep--; renderGuide(); }
