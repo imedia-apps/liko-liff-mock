@@ -735,7 +735,7 @@ function renderRegister(){
 /* ====== 完了（退店可能）。レビューを書いた人にはお花引換コードを表示 ====== */
 function renderDone(){
   const flower = state.reviewed
-    ? `<div class="cap">レビューありがとうございます！お花を1本プレゼント♡<br>スタッフにこの画面をお見せください<br>スタッフ不在時はLINEにてこの画面を送ってください</div>
+    ? `<div class="cap">レビューありがとうございます！お花を1本プレゼント♡<br>スタッフにこの画面をお見せください！<br><span style="font-size:11px;opacity:.85">※スタッフ不在時はLINEにてこの画面を送ってください。</span></div>
        <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>`
     : `<div class="cap">よろしければGoogleレビューもお願いします ♡</div>`;
   const lastKey = LAST_IMG[state.activity && state.activity.id];
