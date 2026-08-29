@@ -344,10 +344,11 @@ const ACTIVITIES = [
    plans:[
      {name:"一般プラン", price:3500},
    ]},
-  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"8月オープン",
-   steps:1, guideTexts:["作り方ガイドは準備中です。オープンをお楽しみに♪"],
+  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"南堀江店限定",
+   imgFamily:"spray", steps:5,
    plans:[
-     {name:"一般プラン", priceText:"準備中", note:"南堀江店（8月オープン）の新体験・詳細は準備中です"},
+     {name:"一般プラン", price:2200, imgKey:"ippan"},
+     {name:"学割プラン", price:1700, imgKey:"gakusei"},
    ]},
 ];
 const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
@@ -355,7 +356,7 @@ const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
 /* 店舗×体験はクライアント提供の最新版（2026-07-31 LINE回答）＝全21店舗。
    gmap＝口コミボタンの遷移先（Googleマップ実在店舗ページ・実機調査＋クライアント確認済み）。
    渋谷=Liko渋谷店／渋谷2号=渋谷2号店／横浜駅前=横浜駅前店／表参道原宿=「4to&Liko」（クライアント提供の短縮リンク）。
-   南堀江（8月）・奈良（9/1）は開業前のためgmap未設定 */
+   南堀江=キャンバスアートリコ 南堀江店／奈良=キャンバスアートリコ奈良駅前（2026-08-29クライアント提供リンクで掲載名確認済み） */
 const GM = q => "https://www.google.com/maps/search/?api=1&query=" + q;
 const STORES = [
   {name:"中崎町",           area:"大阪", staff:"always",  offers:["flower","snake"], walk:"予約不要",
@@ -371,8 +372,10 @@ const STORES = [
    gmap:GM("Liko+大阪心斎橋店")},
   {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
-  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray","flower"], walk:"8月オープン"},
-  {name:"奈良",             area:"奈良", staff:"none",    offers:["flower","snake","beads"], walk:"9月1日オープン"},
+  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray","flower"], walk:"8月オープン",
+   gmap:GM("キャンバスアートリコ+南堀江店")},
+  {name:"奈良",             area:"奈良", staff:"none",    offers:["flower","snake","beads"], walk:"9月1日オープン",
+   gmap:GM("キャンバスアートリコ+奈良駅前")},
   {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"],
    gmap:GM("キャンバスアートリコ+神戸元町店")},
   {name:"京都",             area:"京都", staff:"always",  offers:["chain","flower","art"],
