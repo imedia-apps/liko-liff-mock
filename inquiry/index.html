@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>キャンバスアート Liko｜お問い合わせ</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+:root{
+  --beige:#F5EFE6; --brown:#8B6F47; --brown-d:#6B5544; --pink:#D4A5A5;
+  --scr:#F7F2EA; --line:#E7DCCB; --ink:#4A3B2E; --muted:#9B8B7A;
+  --green:#06C755;
+  --font-sans:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  --font-serif:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:#E7DCCB;
+  font-family:var(--font-sans);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* アプリ枠（PCでは中央にスマホ幅／実機では全画面） */
+.app{
+  position:relative;width:100%;max-width:420px;height:100dvh;max-height:900px;
+  background:var(--scr);overflow:hidden;
+  box-shadow:0 12px 40px rgba(80,60,40,.22);
+  display:flex;flex-direction:column;
+}
+@media (max-width:430px){
+  body{background:var(--scr)}                       /* 万一の隙間もアプリ背景色と同化させる */
+  .app{max-height:none;box-shadow:none;
+       padding-bottom:env(safe-area-inset-bottom)}  /* iPhoneホームバー領域まで背景を延ばし、中身はその上に載せる */
+}
+
+/* 画面切替 */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--scr);
+  animation:fade .28s ease}
+.screen.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+
+/* ヘッダー */
+.hdr{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);flex:none}
+.hdr .back{color:#9A8167;font-size:22px;cursor:pointer;width:24px}
+.hdr .back.hide{visibility:hidden}
+.hdr .ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d)}
+.brand{font-family:var(--font-serif);font-size:20px;color:var(--brown);letter-spacing:.04em;text-align:center;width:100%}
+.brand small{display:block;font-size:9px;letter-spacing:.34em;color:var(--pink);margin-top:2px}
+
+/* 本文 */
+.body{padding:16px;flex:1;display:flex;flex-direction:column;gap:11px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cap{font-size:12px;color:var(--muted)}
+.sub{font-size:14px;color:var(--brown-d);font-weight:600}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.circle{width:92px;height:92px;border-radius:50%;background:#EFE3D2;display:flex;align-items:center;justify-content:center;color:var(--brown);font-size:42px}
+.circle.green{background:var(--green);color:#fff}
+
+/* 検索・チップ */
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:13px;flex:none}
+.search input{border:0;outline:0;font-size:13px;background:transparent;flex:1;color:var(--ink);font-family:inherit}
+.search input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;flex:none}
+.chip{font-size:12px;padding:6px 13px;border-radius:15px;background:#EDE4D5;color:var(--brown-d);cursor:pointer;user-select:none}
+.chip.on{background:var(--brown-d);color:var(--scr)}
+
+/* カード */
+.card{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:transform .08s}
+.card:active{transform:scale(.98)}
+.card .ic{color:#9A8167;font-size:22px;flex:none}
+.card .nm{font-size:14px;color:var(--ink)}
+.card .meta{font-size:11px;color:var(--muted);margin-top:2px}
+.card .grow{flex:1;min-width:0}
+.tag{font-size:10px;padding:3px 9px;border-radius:10px;background:#EDE4D5;color:#8A7461;flex:none}
+.tag.on{background:#E7C8CC;color:#A85C6B}
+.count{font-size:11px;color:var(--muted);flex:none}
+
+/* プラン */
+.plan{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;position:relative;transition:transform .08s}
+.plan:active{transform:scale(.99)}
+.plan.sel{border:2px solid var(--brown-d);background:#FBF7F0}
+.plan.hot{border:1.5px solid var(--pink)}
+.plan.hot.sel{border:2px solid var(--pink)}
+.plan .pn{font-size:14px;color:var(--ink)}
+.plan .price{font-size:14px;color:var(--brown-d);font-weight:700}
+.badge{position:absolute;top:-9px;right:12px;background:var(--pink);color:#fff;font-size:10px;padding:2px 10px;border-radius:10px}
+
+/* 写真プレースホルダ */
+.photo{background:#EAE0D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#B09A7E;font-size:12px;flex:none}
+.photo i{font-size:28px}
+
+/* 料金枠 */
+.fee{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px 14px;font-size:13px;display:flex;flex-direction:column;gap:8px;flex:none}
+.row{display:flex;justify-content:space-between}
+.note{font-size:11px;color:#C07A6E}
+.banner{background:#FBF3F2;border:1px solid #EDD3D3;border-radius:11px;padding:11px 12px;font-size:12px;color:#A85C6B;display:flex;gap:8px;align-items:flex-start}
+.banner i{font-size:16px;flex:none;margin-top:1px}
+
+/* ステップ進行 */
+.dots{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--muted);flex:none}
+.dot{width:8px;height:8px;border-radius:50%;background:#D8CBB5}
+.dot.on{background:var(--pink)}
+
+/* CTA */
+.cta{background:var(--brown-d);color:var(--scr);text-align:center;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;flex:none;transition:transform .08s;user-select:none}
+a.cta{text-decoration:none;display:block}
+.cta:active{transform:scale(.98)}
+.cta.green{background:var(--green)}
+.cta.ghost{background:transparent;color:var(--muted);padding:9px;font-size:13px}
+.cta.disabled{background:#D8CBB5;color:#fff;pointer-events:none}
+.spacer{margin-top:auto}
+
+/* レビュー手順 */
+.rev{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid #EAE0D0;border-radius:11px;padding:11px 12px;font-size:13px}
+.num{width:22px;height:22px;border-radius:50%;background:var(--brown-d);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.stars{color:#E8B44A;font-size:15px;letter-spacing:2px}
+
+/* 支払いアイコン */
+.pay{display:flex;gap:14px;justify-content:center;color:#7E6A55;font-size:26px}
+
+/* 下部「LINEで質問」バー（メインCTAと同サイズに統一・2026-08-11） */
+.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#fff;font-size:14px;padding:14px;border-radius:12px;cursor:pointer;flex:none}
+
+/* タブナビ */
+.nav{display:flex;border-top:1px solid var(--line);background:#fff;flex:none}
+.nav div{flex:1;text-align:center;padding:9px 0;font-size:9px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav i{font-size:18px}
+
+/* トースト */
+.toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);max-width:82%;background:rgba(74,59,46,.96);color:#fff;font-size:12px;line-height:1.55;padding:11px 16px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;text-align:center;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LINEで質問 入力シート */
+.sheet-mask{position:absolute;inset:0;background:rgba(40,30,22,.38);display:none;align-items:flex-end;z-index:30}
+.sheet-mask.show{display:flex}
+.sheet{background:#fff;width:100%;border-radius:18px 18px 0 0;padding:18px 16px 16px;display:flex;flex-direction:column;gap:10px;animation:sheetUp .28s ease}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.sheet-ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d);display:flex;align-items:center;gap:7px}
+.sheet-ttl i{color:var(--green);font-size:19px}
+.sheet-cap{font-size:11px;color:var(--muted)}
+.sheet-input{border:1px solid var(--line);border-radius:11px;padding:11px;font-size:13px;font-family:inherit;min-height:90px;resize:none;color:var(--ink);outline:none;background:var(--scr)}
+.sheet-input::placeholder{color:var(--muted)}
+.sheet-ctx{font-size:11px;color:#A85C6B;background:#FBF3F2;border-radius:9px;padding:9px 10px;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.sheet-ctx i{font-size:14px;flex:none;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- 1. 店舗選択（最初の画面。旧「友だち追加」画面はLIFF化に伴い削除＝LINEの同意画面がその役割・2026-08-11） -->
+  <section class="screen" data-scr="store">
+    <div class="hdr"><i class="ti ti-chevron-left back hide"></i><span class="ttl">店舗を選ぶ</span></div>
+    <div class="body">
+      <div class="search"><i class="ti ti-search" style="color:var(--muted)"></i>
+        <input id="storeSearch" placeholder="店名・エリアで探す" oninput="renderStores()"></div>
+      <div class="chips" id="areaChips"></div>
+      <div class="count" id="storeCount"></div>
+      <div id="storeList" style="display:flex;flex-direction:column;gap:9px"></div>
+    </div>
+    <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
+  </section>
+
+  <!-- 3. ウェルカム（体験選択） -->
+  <section class="screen" data-scr="welcome">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">体験を選ぶ</span></div>
+    <div class="body">
+      <div class="sub" style="text-align:center" id="welcomeMsg">ようこそ ♡</div>
+      <div class="cap" style="text-align:center;margin-bottom:2px">体験メニューを選んでください</div>
+      <div id="actList" style="display:flex;flex-direction:column;gap:9px"></div>
+    </div>
+    <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>LINEで質問する（11-19時）</div>
+  </section>
+
+  <!-- 3.5 スタッフ対応の体験（コインリング等）：スタッフ呼び出し画面 -->
+  <section class="screen" data-scr="staffcall">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl" id="staffcallTitle">コインリング</span></div>
+    <div class="body">
+      <div class="center" style="flex:none;margin-top:10px">
+        <div class="circle"><i class="ti ti-users"></i></div>
+        <div class="sub">スタッフと一緒におつくりいただく<br>ワークショップです</div>
+        <div class="cap">お近くのスタッフにお声がけください♪</div>
+      </div>
+      <div class="banner"><i class="ti ti-info-circle"></i><span>お近くにスタッフが見当たらないときは、下のボタンから呼び出しできます。</span></div>
+      <div class="cta spacer" onclick="callStaff()"><i class="ti ti-bell-ringing"></i> スタッフを呼び出す</div>
+      <div class="cta ghost" onclick="askLine()">LINEで連絡する（11-19時）</div>
+    </div>
+  </section>
+
+  <!-- 4. プラン選択 -->
+  <section class="screen" data-scr="plan">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">プランを選ぶ</span></div>
+    <div class="body">
+      <div id="planList" style="display:flex;flex-direction:column;gap:9px"></div>
+      <div class="cta spacer disabled" id="planCta" onclick="go('fee')">プランを選んでください</div>
+    </div>
+  </section>
+
+  <!-- 5. 料金・同意 -->
+  <section class="screen" data-scr="fee">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">料金のご案内</span></div>
+    <div class="body">
+      <div id="feeMedia" style="flex:none"><div class="photo" style="height:150px"><i class="ti ti-photo"></i>プラン説明の画像</div></div>
+      <div class="sub" style="text-align:center" id="feeTitle"></div>
+      <div class="fee">
+        <div class="row"><span class="cap">所要時間</span><span id="feeTime">約30分</span></div>
+        <div class="row"><span class="cap">お支払い</span><span id="feePay">クレジット / PayPay / 現金</span></div>
+        <div class="note" id="feeNote">※ JCBはご利用いただけません</div>
+      </div>
+      <div class="cta spacer" onclick="startGuide()">理解しました</div>
+    </div>
+  </section>
+
+  <!-- 6. 制作ガイド -->
+  <section class="screen" data-scr="guide">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">作り方ガイド</span></div>
+    <div class="body">
+      <div class="dots" id="guideDots"></div>
+      <div id="guideMedia" style="flex:none"><div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div></div>
+      <div class="sub" style="text-align:center" id="guideText"></div>
+      <div class="cta spacer" id="guideNext" onclick="guideNext()"><i class="ti ti-arrow-right"></i> 次へ</div>
+      <div class="cta ghost" onclick="guidePrev()">前のステップに戻る</div>
+    </div>
+    <div class="qbar" onclick="askLine()"><i class="ti ti-message-circle"></i>作り方で困ったら質問</div>
+  </section>
+
+  <!-- 完了（問い合わせ版：口コミ・お会計は無し） -->
+  <section class="screen" data-scr="done">
+    <div class="body">
+      <div class="center" id="doneBody"></div>
+      <div class="cta spacer" onclick="restart()">終了する</div>
+    </div>
+  </section>
+
+  <!-- LINEで質問 入力シート -->
+  <div class="sheet-mask" id="sheetMask" onclick="closeAsk()">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-ttl"><i class="ti ti-brand-line"></i>LINEで質問する</div>
+      <div class="sheet-cap">スタッフが 11:00〜19:00 に返信します</div>
+      <textarea id="askText" class="sheet-input" placeholder="困っていることを入力してください（例：留め具のつけ方がわかりません）"></textarea>
+      <div class="sheet-ctx" id="askCtx"></div>
+      <div class="cta green" onclick="sendAsk()">送信する</div>
+      <div class="cta ghost" onclick="closeAsk()">閉じる</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ====== LIFF連携（2026-08-10発行・iMediaサービスメニューチャネル内「Liko 体験アプリ」） ======
+   LIFF URL: https://liff.line.me/2008591537-j9q2LDLo（liko本番・(株)balibaliプロバイダー）
+   通常ブラウザで開いた場合は init が失敗しても何も起きない（そのままWebアプリとして動く） */
+const LIFF_ID = '';  // 問い合わせ専用LIFFの発行後にIDを入れる
+if (window.liff && LIFF_ID) {
+  liff.init({ liffId: LIFF_ID })
+    .then(() => console.log('LIFF init OK. inClient=', liff.isInClient()))
+    .catch(err => console.warn('LIFF init失敗（通常ブラウザでは無視してOK）:', err));
+}
+
+/* ====== 実データ（要件定義書 元依頼PDF §2.3〜2.6 準拠。本番はスプレッドシート／簡易DBから読み込む想定） ======
+   staff: 'none'=完全無人 / 'always'=常時有人 / 'weekend'=土日のみ有人
+   offers: その店舗で実施できるアクティビティID（§2.6 店舗×アクティビティ マトリックス）
+   ※2026-07-31更新：名古屋栄（8月開業・§2.6準拠）と名古屋（要件定義書に無い新店舗・体験は仮設定）を追加＝全20店舗 */
+/* 体験ごとに plans（プラン一覧）・steps（ガイドのステップ数）・imgFamily（ガイド画像セット）を持つ。
+   plans が無い体験は DEFAULT_PLANS、steps 省略時は4。価格・構成はクライアント提供のガイド画像準拠 */
+const ACTIVITIES = [
+  {id:"snake",    name:"スネークブレスレット作り", icon:"ti-circles",   time:"約30分",
+   imgFamily:"bracelet", steps:4,
+   plans:[
+     {name:"一般プラン",       price:2500, imgKey:"ippan"},
+     {name:"学割プラン",       price:2000, imgKey:"gakusei"},
+     {name:"付け放題プラン",   price:3500, imgKey:"tsukehodai", hot:true},
+     {name:"パーツのみ購入",   price:1500, note:"お好きなパーツを20個お選びいただけます",
+      guideImgs:["parts_only"], lastLabel:"選び終わった → 次へ"},   // ガイド＝クライアント製「パーツのみの購入」1枚絵
+   ]},
+  {id:"flower",   name:"枯れないお花購入",         icon:"ti-flower",    time:"約15分",
+   imgFamily:"flower", steps:3,
+   plans:[
+     {name:"一般プラン", priceText:"1本 ¥600〜", note:"ブーケ包装 無料・手提げ袋 ＋¥100"},
+   ]},
+  {id:"art",      name:"キャンバスアート",         icon:"ti-palette",   time:"約40分",
+   imgFamily:"canvas", steps:5,
+   plans:[
+     {name:"一般プラン", price:4500, imgKey:"ippan",   note:"キャンバスは大・小サイズから選べます"},
+     {name:"学割プラン", price:2500, imgKey:"gakusei", note:"小サイズのみ"},
+   ]},
+  {id:"chain",    name:"チェーンアクセサリー作り", icon:"ti-link",      time:"約35分",
+   imgFamily:"accessory", steps:4,
+   plans:[
+     {name:"一般プラン", price:2200, imgKey:"ippan"},
+     {name:"学割プラン", price:1700, imgKey:"gakusei"},
+   ]},
+  {id:"pen",      name:"カスタムグッズづくり",     icon:"ti-pencil",    time:"約20分",
+   imgFamily:"custom", steps:3,
+   plans:[
+     {name:"一般プラン", priceText:"¥1,500〜", note:"ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）"},
+   ]},
+  {id:"keyboard", name:"カスタムキーボード",       icon:"ti-keyboard",  time:"約45分",
+   imgFamily:"keyboard", steps:3,
+   plans:[
+     {name:"1個プラン", price:500,  note:"パーツ付け放題",
+      guideImgs:["keyboard1_step01","keyboard_step02","keyboard1_step03"]},
+     {name:"4個プラン", price:1500, note:"パーツ付け放題",
+      guideImgs:["keyboard4_step01","keyboard_step02","keyboard4_step03"]},
+   ]},
+  {id:"ring",     name:"コインリング",             icon:"ti-ring",      time:"約40分・スタッフと一緒に",
+   staffOnly:true},
+  {id:"beads",    name:"アイロンビーズ",           icon:"ti-grid-dots", time:"60分〜",
+   imgFamily:"beads", steps:5,
+   plans:[
+     {name:"60分プラン",  price:1500, imgKey:"60min",  time:"60分",  note:"追加30分 ¥500"},
+     {name:"180分プラン", price:3500, imgKey:"180min", time:"180分", hot:true},
+   ]},
+  {id:"glasses",  name:"カスタムメガネ",           icon:"ti-eyeglass",  time:"約30分",
+   imgFamily:"glasses", steps:4,
+   plans:[
+     {name:"一般プラン", price:3500},
+     {name:"お持ち込みメガネ・サングラス", price:1500, note:"お持ち込みのメガネ・サングラスをカスタムできます",
+      guideImgs:["glasses_bring_step01","glasses_bring_step02","glasses_bring_step03"]},
+   ]},
+  {id:"perfume",  name:"香りづくり体験",           icon:"ti-flask",     time:"約25分",
+   imgFamily:"perfume", steps:5,
+   plans:[
+     {name:"一般プラン", price:3500},
+   ]},
+  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"南堀江店限定",
+   imgFamily:"spray", steps:5,
+   plans:[
+     {name:"一般プラン", price:2200, imgKey:"ippan"},
+     {name:"学割プラン", price:1700, imgKey:"gakusei"},
+   ]},
+];
+const ACT = Object.fromEntries(ACTIVITIES.map(a=>[a.id,a]));
+
+/* 店舗×体験はクライアント提供の最新版（2026-07-31 LINE回答）＝全21店舗。
+   gmap＝口コミボタンの遷移先（Googleマップ実在店舗ページ・実機調査＋クライアント確認済み）。
+   渋谷=Liko渋谷店／渋谷2号=渋谷2号店／横浜駅前=横浜駅前店／表参道原宿=「4to&Liko」（クライアント提供の短縮リンク）。
+   南堀江=キャンバスアートリコ 南堀江店／奈良=キャンバスアートリコ奈良駅前（2026-08-29クライアント提供リンクで掲載名確認済み） */
+const GM = q => "https://www.google.com/maps/search/?api=1&query=" + q;
+const STORES = [
+  {name:"中崎町",           area:"大阪", staff:"always",  offers:["flower","snake"], walk:"予約不要",
+   gmap:GM("キャンバスアートリコ+中崎町店")},
+  {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"],
+   note:"スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。",
+   gmap:GM("キャンバスアートリコ+大阪天満店")},
+  {name:"西天満",           area:"大阪", staff:"none",    offers:["flower","snake"], noCash:true,
+   gmap:GM("キャンバスアートリコ+西天満店")},
+  {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
+  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","perfume","glasses","beads","ring"],
+   gmap:GM("Liko+大阪心斎橋店")},
+  {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
+  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray","flower"], walk:"8月オープン",
+   gmap:GM("キャンバスアートリコ+南堀江店")},
+  {name:"奈良",             area:"奈良", staff:"none",    offers:["flower","snake","beads"], walk:"9月1日オープン",
+   gmap:GM("キャンバスアートリコ+奈良駅前")},
+  {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"],
+   gmap:GM("キャンバスアートリコ+神戸元町店")},
+  {name:"京都",             area:"京都", staff:"always",  offers:["chain","flower","art"],
+   gmap:GM("キャンバスアートリコ+京都店")},
+  {name:"祇園",             area:"京都", staff:"none",    offers:["flower","snake","pen"],
+   gmap:GM("キャンバスアートリコ+祇園店")},
+  {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"], noFlower:true,
+   gmap:GM("Liko渋谷店")},
+  {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true, noFlower:true,
+   gmap:GM("キャンバスアートリコ+渋谷2号店")},
+  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+名古屋栄店")},
+  {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["flower","snake","beads"],
+   gmap:GM("キャンバスアートリコ+名古屋駅前店")},
+  {name:"池袋",             area:"東京", staff:"weekend", offers:["flower","snake","art"],
+   gmap:GM("Liko+池袋店")},
+  {name:"浅草",             area:"東京", staff:"none",    offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+浅草店")},
+  {name:"浅草2号",          area:"東京", staff:"always",  offers:["snake","glasses"], noFlower:true,
+   gmap:GM("キャンバスアートリコ+浅草2号店")},
+  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["flower","snake"],
+   note:"スネークネックレスを作成される方は、スネークブレスレットをお選びください♪",
+   gmap:"https://maps.app.goo.gl/iibLvEXZxZsnuKaq9"},
+  {name:"横浜駅前",         area:"横浜", staff:"none",    offers:["flower","snake"],
+   gmap:GM("キャンバスアートリコ+横浜駅前店")},
+  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["flower","snake","pen"],
+   gmap:GM("キャンバスアートリコ+横浜中華街店")},
+];
+const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知","奈良"];
+const STAFF_TAG = {
+  none:    {label:"無人",     cls:""},
+  always:  {label:"有人",     cls:"on"},
+  weekend: {label:"土日有人", cls:"on"},
+};
+
+/* プラン定義の無い体験用の汎用プラン（画像なし体験のデモ表示用） */
+const DEFAULT_PLANS = [
+  {name:"一般プラン",       price:2500},
+  {name:"学割プラン",       price:2000},
+  {name:"付け放題プラン",   price:3500, hot:true},
+  {name:"パーツ20個プラン", price:1500},
+];
+
+const GUIDE = [
+  "お好きなパーツ・ビーズを選びます",
+  "ビーズをお好みの順に通していきます",
+  "留め具をつけて長さを調整します",
+  "完成！サイズを確認しましょう",
+];
+
+const plansOf = a => (a && a.plans) || DEFAULT_PLANS;
+const stepsOf = a => (a && a.steps) || 4;
+const priceLabel = p => p.priceText || ('¥' + p.price.toLocaleString());
+
+/* ====== 作り方ガイド画像（クライアント提供・../assets/ 33枚）======
+   bracelet=スネークブレスレット（プラン別3セット×4step）／accessory=チェーンアクセ（2セット×4step）／
+   beads=アイロンビーズ（step1のみ60min/180minの2種＋共通step2〜5）／glasses=メガネ4step／custom=カスタムグッズ3step。
+   セットが無い体験はプレースホルダー＋テキストにフォールバック */
+/* ガイドの総ステップ数：プランが専用画像リスト（guideImgs）を持つ場合はその枚数が優先 */
+function guideTotal(){
+  if(state.plan && state.plan.guideImgs) return state.plan.guideImgs.length;
+  return stepsOf(state.activity);
+}
+
+function guideImgSrc(step){  // step: 1〜guideTotal()
+  // プラン専用のガイド画像（例：パーツのみ購入＝1枚絵／キーボード1個・4個／持ち込みメガネ）
+  if(state.plan && state.plan.guideImgs){
+    const n = state.plan.guideImgs[step-1];
+    return n ? `../assets/${n}.png` : null;
+  }
+  const a = state.activity;
+  if(!a || !a.imgFamily || step > stepsOf(a)) return null;
+  const fam = a.imgFamily;
+  if(fam === 'beads'){
+    if(step === 1){ const k = (state.plan && state.plan.imgKey) || '60min'; return `../assets/beads_${k}_step01.png`; }
+    return `../assets/beads_step0${step}.png`;
+  }
+  if(['glasses','custom','flower','keyboard','perfume'].includes(fam)) return `../assets/${fam}_step0${step}.png`;
+  const k = (state.plan && state.plan.imgKey) || 'ippan';   // bracelet / accessory / canvas
+  return `../assets/${fam}_${k}_step0${step}.png`;
+}
+
+/* 完了画面用「完成おめでとうございます」画像（クライアント提供・SNS/LINE誘導入り） */
+const LAST_IMG = { snake:'bracelet_last', flower:'flower_last', art:'canvas_last' };
+
+/* ====== 状態 ====== */
+const state = {store:null, activity:null, plan:null, guideStep:0, reviewed:false};
+let history = ["store"];
+
+/* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
+const LS_KEY = 'liko_inquiry_progress_v1';  // 店舗改名(2026-08)以前の旧キャッシュを無効化するためv2
+function saveProgress(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({history, state})); }catch(e){}
+}
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; }
+}
+
+/* ====== 画面遷移 ====== */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.dataset.scr===id));
+  document.querySelectorAll('.screen.active .body').forEach(b=>b.scrollTop=0);
+  saveProgress();
+}
+function go(id){ history.push(id); onEnter(id); show(id); }
+function back(){
+  if(history.length<=1) return;
+  history.pop();
+  const id = history[history.length-1];
+  onEnter(id); show(id);
+}
+function restart(){
+  history=["store"]; state.store=state.activity=state.plan=null; state.guideStep=0; state.reviewed=false;
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  onEnter('store'); show('store');
+}
+
+/* ====== LINEで質問（お客様が自分で入力。文脈は自動で添付。本番は liff.sendMessages で画面を離れず送信） ====== */
+function askContext(){
+  const cur = history[history.length-1];
+  let ctx = '';
+  if(state.store){
+    ctx = state.store.name + '店';
+    if(cur==='guide' && state.activity) ctx += `・${state.activity.name}・ステップ${state.guideStep+1}`;
+    else if(state.activity) ctx += `・${state.activity.name}`;
+  }
+  return ctx;
+}
+function askLine(){
+  const ctx = askContext();
+  const ctxEl = document.getElementById('askCtx');
+  if(ctx){
+    ctxEl.innerHTML = `<i class="ti ti-info-circle"></i><span>「${ctx}」の情報も一緒に届くので、状況をイチから説明しなくて大丈夫です</span>`;
+    ctxEl.style.display = 'flex';
+  }else{ ctxEl.style.display = 'none'; }
+  document.getElementById('askText').value = '';
+  document.getElementById('sheetMask').classList.add('show');
+}
+function closeAsk(){ document.getElementById('sheetMask').classList.remove('show'); }
+function sendAsk(){
+  const text = document.getElementById('askText').value.trim();
+  const ctx = askContext();
+  closeAsk();
+  // LINE内で開いている場合は本当にトークへ送信（liff.sendMessages・要chat_message.writeスコープ）
+  // 開いたトーク（＝liko公式LINEとのトーク）にユーザーの発言として投稿される
+  if(window.liff && liff.isInClient && liff.isInClient()){
+    const body = (text || '（お問い合わせ）') + (ctx ? `\n―――\n📍 ${ctx}` : '');
+    liff.sendMessages([{ type:'text', text: body }])
+      .then(()=> toast('質問を送りました。返信はこのトーク画面に届きます'))
+      .catch(err => {
+        console.warn('sendMessages失敗:', err);
+        toast('送信できませんでした。お手数ですがトーク画面から直接メッセージをお送りください');
+      });
+  }else{
+    toast('質問を送りました。返信はLINEのトーク画面に届きます（この画面はそのまま残ります）');
+  }
+}
+
+/* 画面ごとの初期化 */
+function onEnter(id){
+  if(id==='store') renderStores();
+  if(id==='welcome') renderWelcome();
+  if(id==='plan') renderPlans();
+  if(id==='fee') renderFee();
+  if(id==='guide') renderGuide();
+  if(id==='done') renderDone();
+}
+function goReview(){
+  /* 問い合わせ版：口コミ・お会計は無し＝ガイドが終わったら完了画面へ */
+  go('done');
+}
+function startGuide(){
+  if(state.activity && state.activity.skipGuide){ goReview(); return; }  // パーツのみ購入等＝ガイド無しでお会計へ
+  state.guideStep=0; go('guide');
+}
+
+/* ====== 店舗選択 ====== */
+let activeArea = "すべて";
+function renderAreaChips(){
+  const box = document.getElementById('areaChips');
+  box.innerHTML = AREAS.map(a=>`<span class="chip ${a===activeArea?'on':''}" onclick="setArea('${a}')">${a}</span>`).join('');
+}
+function setArea(a){ activeArea=a; renderAreaChips(); renderStores(); }
+function renderStores(){
+  renderAreaChips();
+  const q = (document.getElementById('storeSearch').value||"").trim();
+  let list = STORES.filter(s=>{
+    const okArea = activeArea==="すべて" || s.area===activeArea;
+    const okQ = !q || s.name.includes(q) || s.area.includes(q);
+    return okArea && okQ;
+  });
+  document.getElementById('storeCount').textContent = `${list.length}店舗`;
+  document.getElementById('storeList').innerHTML = list.map(s=>{
+    const t = STAFF_TAG[s.staff];
+    const badge = `<span class="tag ${t.cls}">${t.label}</span>`;
+    const meta = [s.area+"エリア", s.walk].filter(Boolean).join('・');
+    return `<div class="card" onclick="selectStore('${s.name}')">
+      <i class="ti ti-map-pin ic"></i>
+      <div class="grow"><div class="nm">${s.name}</div><div class="meta">${meta}</div></div>
+      ${badge}</div>`;
+  }).join('') || `<div class="cap" style="text-align:center;padding:20px">該当する店舗がありません</div>`;
+}
+function selectStore(name){ state.store = STORES.find(s=>s.name===name); go('welcome'); }
+
+/* ====== ウェルカム（体験選択） ====== */
+function renderWelcome(){
+  document.getElementById('welcomeMsg').innerHTML = `${state.store.name}店へようこそ <span style="color:var(--pink)">♡</span>`;
+  // その店舗で実施できる体験のみ表示（要件4.3）
+  const list = state.store.offers.map(id=>ACT[id]).filter(Boolean);
+  const note = state.store.note
+    ? `<div class="banner"><i class="ti ti-info-circle"></i><span>${state.store.note}</span></div>`
+    : '';
+  document.getElementById('actList').innerHTML = note + list.map(a=>
+    `<div class="card" onclick="selectActivity('${a.id}')">
+      <i class="ti ${a.icon} ic"></i>
+      <div class="grow"><div class="nm">${a.name}</div><div class="meta">${a.time}</div></div>
+      <i class="ti ti-chevron-right ic"></i></div>`).join('');
+}
+function selectActivity(id){
+  state.activity = ACT[id];
+  if(state.activity.staffOnly){  // コインリング等＝スタッフと作る体験（2026-07-24クライアント要望）
+    document.getElementById('staffcallTitle').textContent = state.activity.name;
+    go('staffcall');
+  }else{
+    go('plan');
+  }
+}
+function callStaff(){
+  toast('スタッフを呼び出しました。その場で少々お待ちください♪（デモ）');
+}
+
+/* 体験選択直後に見せる完成品イメージ（クライアント提供「○○最初」画像・intro_<id>.png） */
+const INTRO_IMG = new Set(['snake','chain','beads','glasses','pen','flower','art','keyboard','perfume','spray']);
+
+/* ====== プラン選択（体験ごとのプランを表示。1プランだけの体験は自動選択） ====== */
+function renderPlans(){
+  const a = state.activity;
+  const plans = plansOf(a);
+  state.plan = null;
+  const hero = INTRO_IMG.has(a.id)
+    ? `<img src="../assets/intro_${a.id}.png" alt="${a.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block">`
+    : '';
+  // 体験名は画像の下にタイトル表示（2026-08-01 今枝指示：キャプションだと見にくい）
+  const title = `<div style="text-align:center;margin:2px 0 4px">
+      <div style="font-family:var(--font-serif);font-size:17px;color:var(--brown-d);letter-spacing:.03em">${a.name}</div>
+      ${a.time ? `<div class="cap" style="margin-top:2px">${a.time}</div>` : ''}
+    </div>`;
+  document.getElementById('planList').innerHTML = hero + title + plans.map((p,i)=>
+    `<div class="plan ${p.hot?'hot':''}" data-i="${i}" onclick="selectPlan(${i})">
+      ${p.hot?'<span class="badge">人気 No.1</span>':''}
+      <div><div class="pn">${p.name}</div>${p.note?`<div class="cap" style="margin-top:3px">${p.note}</div>`:''}</div>
+      <span class="price" style="flex:none;margin-left:10px">${priceLabel(p)}</span></div>`).join('');
+  if(plans.length === 1){ selectPlan(0); } else { updatePlanCta(); }
+}
+function selectPlan(i){
+  state.plan = plansOf(state.activity)[i];
+  document.querySelectorAll('#planList .plan').forEach(el=>el.classList.toggle('sel', +el.dataset.i===i));
+  updatePlanCta();
+}
+function updatePlanCta(){
+  const cta = document.getElementById('planCta');
+  if(state.plan){ cta.classList.remove('disabled'); cta.textContent = `${state.plan.name}で進む`; }
+  else{ cta.classList.add('disabled'); cta.textContent = 'プランを選んでください'; }
+}
+
+/* ====== 料金・同意 ====== */
+function renderFee(){
+  // 料金はシンプルな料金パネルで表示（2026-08-01 今枝指示：STEP画像の流用は情報過多で見にくい）
+  const p = state.plan, a = state.activity;
+  document.getElementById('feeMedia').innerHTML = `
+    <div style="background:#fff;border:1px solid #EAE0D0;border-radius:14px;padding:24px 16px 20px;text-align:center">
+      <div style="font-size:10px;letter-spacing:.3em;color:var(--pink)">PRICE</div>
+      <div style="font-family:var(--font-serif);font-size:20px;color:var(--brown-d);margin-top:10px;letter-spacing:.02em">${a.name}</div>
+      ${p.name !== a.name ? `<div style="font-size:13px;color:var(--muted);margin-top:4px">${p.name}</div>` : ''}
+      <div style="width:34px;height:1px;background:var(--line);margin:12px auto"></div>
+      <div style="font-family:var(--font-serif);font-size:34px;color:var(--brown);line-height:1">${priceLabel(p)}<span style="font-size:12px;color:var(--muted);margin-left:4px">${p.price ? '（税込）' : ''}</span></div>
+      ${p.note ? `<div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7">${p.note}</div>` : ''}
+    </div>`;
+  document.getElementById('feeTitle').style.display = 'none';
+  document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
+  // 支払い方法（2026-08-02クライアント指示：カード・PayPayもレジ支払い＝スマホ決済の注記は出さない。西天満は現金不可）
+  const noteEl = document.getElementById('feeNote');
+  if(state.store.noCash){
+    document.getElementById('feePay').textContent = 'カード / PayPay';
+    noteEl.textContent = '※ この店舗は現金でのお支払いができません';
+    noteEl.style.display = '';
+  }else{
+    document.getElementById('feePay').textContent = '現金 / カード / PayPay';
+    noteEl.textContent = '';
+    noteEl.style.display = 'none';
+  }
+}
+
+/* ====== 制作ガイド（ステップ数は体験ごと） ====== */
+function renderGuide(){
+  const total = guideTotal();
+  document.getElementById('guideDots').innerHTML =
+    Array.from({length: total}, (_,i)=>`<span class="dot ${i<=state.guideStep?'on':''}"></span>`).join('')
+    + `<span style="margin-left:6px">ステップ ${state.guideStep+1} / ${total}</span>`;
+  const src = guideImgSrc(state.guideStep+1);
+  const txt = document.getElementById('guideText');
+  if(src){
+    document.getElementById('guideMedia').innerHTML =
+      `<img src="${src}" alt="作り方ガイド ステップ${state.guideStep+1}" style="width:100%;border:1px solid #EAE0D0;border-radius:12px;display:block;background:#fff">`;
+    txt.style.display = 'none';
+  }else{
+    document.getElementById('guideMedia').innerHTML =
+      `<div class="photo" style="height:190px"><i class="ti ti-photo"></i>作り方の写真</div>`;
+    txt.style.display = '';
+    txt.textContent = (state.activity.guideTexts || GUIDE)[state.guideStep] || `ステップ ${state.guideStep+1}`;
+  }
+  const next = document.getElementById('guideNext');
+  next.innerHTML = (state.guideStep===total-1)
+    ? '<i class="ti ti-check"></i> ' + ((state.plan && state.plan.lastLabel) || '作り終わった → 次へ')
+    : '<i class="ti ti-arrow-right"></i> 次へ';
+  saveProgress();
+}
+function guideNext(){
+  if(state.guideStep < guideTotal()-1){ state.guideStep++; renderGuide(); }
+  else{ goReview(); }  // 作り終わったら口コミ誘導（会計前）→ お会計（お花なし店舗はセルフレジ直行）
+}
+function guidePrev(){
+  if(state.guideStep>0){ state.guideStep--; renderGuide(); }
+  else{ back(); }
+}
+
+/* ====== 完了（問い合わせ版・B案）====== */
+function renderDone(){
+  document.getElementById('doneBody').innerHTML = `
+    <div class="circle" style="color:var(--pink)"><i class="ti ti-confetti"></i></div>
+    <div class="sub">作り方ガイドは以上です</div>
+    <div class="cap">ご来店お待ちしております ♡</div>`;
+}
+
+/* ====== トースト ====== */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ====== 起動（前回の続きがあれば復元＝離脱→復帰しても続きから） ====== */
+renderAreaChips();
+const saved = loadProgress();
+const last = saved && saved.history && saved.history[saved.history.length-1];
+if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store'){
+  history = saved.history;
+  Object.assign(state, saved.state);
+  onEnter(last);
+  show(last);
+  setTimeout(()=>toast('前回の続きから再開しました'), 500);
+}else{
+  onEnter('store'); show('store');
+}
+</script>
+</body>
+</html>
