@@ -250,7 +250,7 @@ a.cta{text-decoration:none;display:block}
 /* ====== LIFF連携（2026-08-10発行・iMediaサービスメニューチャネル内「Liko 体験アプリ」） ======
    LIFF URL: https://liff.line.me/2008591537-j9q2LDLo（liko本番・(株)balibaliプロバイダー）
    通常ブラウザで開いた場合は init が失敗しても何も起きない（そのままWebアプリとして動く） */
-const LIFF_ID = '';  // 問い合わせ専用LIFFの発行後にIDを入れる
+const LIFF_ID = '2011333633-BCfEpVnT';  // 問い合わせ専用LIFF（「Likoお問い合わせ」チャネル 2011333633）
 if (window.liff && LIFF_ID) {
   liff.init({ liffId: LIFF_ID })
     .then(() => console.log('LIFF init OK. inClient=', liff.isInClient()))
