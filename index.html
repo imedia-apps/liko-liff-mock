@@ -778,15 +778,35 @@ function toast(msg){
 renderAreaChips();
 const saved = loadProgress();
 const last = saved && saved.history && saved.history[saved.history.length-1];
+try{
 if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store'){
   history = saved.history;
   Object.assign(state, saved.state);
+  /* 復帰時は保存時点のスナップショットではなく最新の定義データに引き直す
+     （メニュー改定後に古い店舗・体験データを引きずらないため。2026-09-09） */
+  if(state.store){
+    const fresh = STORES.find(s => s.name === state.store.name);
+    if(fresh){ state.store = fresh; } else { restart(); throw ''; }
+  }
+  if(state.activity){
+    const freshA = ACT[state.activity.id];
+    if(freshA && (!state.store || (state.store.offers||[]).includes(freshA.id))){
+      state.activity = freshA;
+      if(state.plan){
+        const plans = freshA.plans || DEFAULT_PLANS;
+        state.plan = plans.find(p => p.name === state.plan.name) || null;
+        if(!state.plan){ restart(); throw ''; }
+      }
+    } else { restart(); throw ''; }
+  }
+  if(last==='guide') state.guideStep = Math.min(state.guideStep||0, Math.max(0, guideTotal()-1));
   onEnter(last);
   show(last);
   setTimeout(()=>toast('前回の続きから再開しました'), 500);
 }else{
   onEnter('store'); show('store');
 }
+}catch(e){ /* restart()済み（保存データが現行定義と不整合だった場合） */ }
 </script>
 </body>
 </html>
