@@ -405,6 +405,19 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+横浜中華街店")},
 ];
 const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知","奈良"];
+
+/* ====== 2026-10-01 メニュー改定（クライアント指示2026-09-09・一律10/1切替） ======
+   9/30まで＝現行メニュー、10/1 0:00(JST)以降＝下記に自動切替（再デプロイ不要）。
+   浅草2号: チェーン追加／表参道原宿: メガネ・ビーズ追加＋お花廃止／横浜中華街: チェーン・ビーズ追加＋カスタムグッズ廃止 */
+(function(){
+  if(Date.now() < Date.UTC(2026, 8, 30, 15, 0, 0)) return;  // = 2026-10-01 00:00 JST
+  const upd = {
+    "浅草2号":    ["snake","glasses","chain"],
+    "表参道原宿": ["snake","glasses","beads"],
+    "横浜中華街": ["snake","flower","chain","beads"],
+  };
+  STORES.forEach(s => { if(upd[s.name]) s.offers = upd[s.name]; });
+})();
 const STAFF_TAG = {
   none:    {label:"無人",     cls:""},
   always:  {label:"有人",     cls:"on"},
