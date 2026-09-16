@@ -148,8 +148,57 @@ a.cta{text-decoration:none;display:block}
 <body>
 <div class="app" id="app">
   <!-- 1. 店舗選択（最初の画面。旧「友だち追加」画面はLIFF化に伴い削除＝LINEの同意画面がその役割・2026-08-11） -->
+  <!-- 0. TOP（クライアント製デザイン画像＋透明タップ領域。2026-09-16構築） -->
+  <section class="screen" data-scr="top">
+    <div class="body" style="padding:0;gap:0">
+      <div style="position:relative;width:100%">
+        <img src="../assets/inquiry_top.png" alt="思い出作りなら、Liko。" style="width:100%;display:block">
+        <!-- 画像内ボタンに合わせた透明タップ領域（%座標・画像941x1672基準） -->
+        <div onclick="go('access')"  style="position:absolute;left:4.5%;top:64.5%;width:45%;height:9.3%;cursor:pointer"></div>
+        <div onclick="go('welcomeFlow')" style="position:absolute;left:51%;top:64.5%;width:45%;height:9.3%;cursor:pointer"></div>
+        <div onclick="go('reserve')" style="position:absolute;left:4.5%;top:74.2%;width:45%;height:9.3%;cursor:pointer"></div>
+        <div onclick="go('contact')" style="position:absolute;left:51%;top:74.2%;width:45%;height:9.3%;cursor:pointer"></div>
+        <div onclick="go('faq')"     style="position:absolute;left:4.5%;top:83.8%;width:91.5%;height:5.8%;cursor:pointer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0-1. 店舗アクセス（タップでGoogleマップへ直行） -->
+  <section class="screen" data-scr="access">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">店舗アクセス</span></div>
+    <div class="body">
+      <div class="cap">店舗をタップするとGoogleマップが開きます</div>
+      <div id="accessList" style="display:flex;flex-direction:column;gap:11px"></div>
+    </div>
+  </section>
+
+  <!-- 0-2. 予約について -->
+  <section class="screen" data-scr="reserve">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">予約について</span></div>
+    <div class="body" style="padding:0">
+      <img src="../assets/inquiry_reserve.png" alt="Likoは全店予約不要です" style="width:100%;display:block">
+    </div>
+  </section>
+
+  <!-- 0-3. お問い合わせ -->
+  <section class="screen" data-scr="contact">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お問い合わせ</span></div>
+    <div class="body" style="padding:0">
+      <img src="../assets/inquiry_contact.png" alt="直接LINEのメッセージへご連絡ください" style="width:100%;display:block">
+    </div>
+  </section>
+
+  <!-- 0-4. よくある質問 -->
+  <section class="screen" data-scr="faq">
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">よくある質問</span></div>
+    <div class="body" style="padding:0;gap:0">
+      <img src="../assets/inquiry_faq1.png" alt="よくある質問 1" style="width:100%;display:block">
+      <img src="../assets/inquiry_faq2.png" alt="よくある質問 2" style="width:100%;display:block">
+    </div>
+  </section>
+
   <section class="screen" data-scr="store">
-    <div class="hdr"><i class="ti ti-chevron-left back hide"></i><span class="ttl">店舗を選ぶ</span></div>
+    <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">店舗を選ぶ</span></div>
     <div class="body">
       <div class="search"><i class="ti ti-search" style="color:var(--muted)"></i>
         <input id="storeSearch" placeholder="店名・エリアで探す" oninput="renderStores()"></div>
@@ -451,7 +500,7 @@ const LAST_IMG = { snake:'bracelet_last', flower:'flower_last', art:'canvas_last
 
 /* ====== 状態 ====== */
 const state = {store:null, activity:null, plan:null, guideStep:0, reviewed:false};
-let history = ["store"];
+let history = ["top"];
 
 /* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
 const LS_KEY = 'liko_inquiry_progress_v1';  // 店舗改名(2026-08)以前の旧キャッシュを無効化するためv2
@@ -468,7 +517,10 @@ function show(id){
   document.querySelectorAll('.screen.active .body').forEach(b=>b.scrollTop=0);
   saveProgress();
 }
-function go(id){ history.push(id); onEnter(id); show(id); }
+function go(id){
+  if(id==='welcomeFlow') id='store';  // TOPの「各店舗でできる体験」→ 店舗選択へ
+  history.push(id); onEnter(id); show(id);
+}
 function back(){
   if(history.length<=1) return;
   history.pop();
@@ -476,9 +528,9 @@ function back(){
   onEnter(id); show(id);
 }
 function restart(){
-  history=["store"]; state.store=state.activity=state.plan=null; state.guideStep=0; state.reviewed=false;
+  history=["top"]; state.store=state.activity=state.plan=null; state.guideStep=0; state.reviewed=false;
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
-  onEnter('store'); show('store');
+  onEnter('top'); show('top');
 }
 
 /* ====== LINEで質問（お客様が自分で入力。文脈は自動で添付。本番は liff.sendMessages で画面を離れず送信） ====== */
@@ -524,6 +576,7 @@ function sendAsk(){
 
 /* 画面ごとの初期化 */
 function onEnter(id){
+  if(id==='access') renderAccess();
   if(id==='store') renderStores();
   if(id==='welcome') renderWelcome();
   if(id==='plan') renderPlans();
@@ -538,6 +591,18 @@ function goReview(){
 function startGuide(){
   if(state.activity && state.activity.skipGuide){ goReview(); return; }  // パーツのみ購入等＝ガイド無しでお会計へ
   state.guideStep=0; go('guide');
+}
+
+/* ====== 店舗アクセス（タップでGoogleマップ直行） ====== */
+function renderAccess(){
+  document.getElementById('accessList').innerHTML = STORES.map(s=>{
+    const href = s.gmap || GM("キャンバスアートリコ+"+s.name+"店");
+    const meta = [s.area+"エリア", s.walk].filter(Boolean).join('・');
+    return `<a class="card" href="${href}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+      <i class="ti ti-map-pin ic"></i>
+      <div class="grow"><div class="nm">${s.name}</div><div class="meta">${meta}</div></div>
+      <i class="ti ti-external-link" style="color:var(--muted);font-size:16px"></i></a>`;
+  }).join('');
 }
 
 /* ====== 店舗選択 ====== */
@@ -712,7 +777,7 @@ renderAreaChips();
 const saved = loadProgress();
 const last = saved && saved.history && saved.history[saved.history.length-1];
 try{
-if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store'){
+if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store' && last!=='top'){
   history = saved.history;
   Object.assign(state, saved.state);
   /* 復帰時は保存時点のスナップショットではなく最新の定義データに引き直す
@@ -737,7 +802,7 @@ if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!==
   show(last);
   setTimeout(()=>toast('前回の続きから再開しました'), 500);
 }else{
-  onEnter('store'); show('store');
+  onEnter('top'); show('top');
 }
 }catch(e){ /* restart()済み（保存データが現行定義と不整合だった場合） */ }
 </script>
