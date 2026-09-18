@@ -131,6 +131,16 @@ a.cta{text-decoration:none;display:block}
 .toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);max-width:82%;background:rgba(74,59,46,.96);color:#fff;font-size:12px;line-height:1.55;padding:11px 16px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;text-align:center;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* 右ドロワーメニュー（TOPのハンバーガー） */
+.drawer-mask{position:absolute;inset:0;background:rgba(40,30,22,.38);display:none;z-index:40}
+.drawer-mask.show{display:block}
+.drawer{position:absolute;top:0;right:0;bottom:0;width:72%;max-width:300px;background:#F7F2EA;z-index:41;display:none;flex-direction:column;padding:20px 18px;box-shadow:-8px 0 30px rgba(80,60,40,.25);animation:drawerIn .25s ease}
+.drawer.show{display:flex}
+@keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
+.d-close{align-self:flex-end;font-size:22px;color:#9A8167;cursor:pointer;padding:4px}
+.d-item{display:flex;align-items:center;gap:12px;padding:15px 8px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink);cursor:pointer}
+.d-item i{color:#9A8167;font-size:18px}
+
 /* LINEで質問 入力シート */
 .sheet-mask{position:absolute;inset:0;background:rgba(40,30,22,.38);display:none;align-items:flex-end;z-index:30}
 .sheet-mask.show{display:flex}
@@ -150,10 +160,11 @@ a.cta{text-decoration:none;display:block}
   <!-- 1. 店舗選択（最初の画面。旧「友だち追加」画面はLIFF化に伴い削除＝LINEの同意画面がその役割・2026-08-11） -->
   <!-- 0. TOP（クライアント製デザイン画像＋透明タップ領域。2026-09-16構築） -->
   <section class="screen" data-scr="top">
-    <div class="body" style="padding:0;gap:0">
+    <div class="body" style="padding:0;gap:0;background:#e3cebc">
       <div style="position:relative;width:100%">
         <img src="../assets/inquiry_top.png" alt="思い出作りなら、Liko。" style="width:100%;display:block">
         <!-- 画像内ボタンに合わせた透明タップ領域（%座標・6ボタン版トップ画像基準） -->
+        <div onclick="openDrawer()"      style="position:absolute;left:81%;top:0.8%;width:17%;height:4.6%;cursor:pointer"></div>
         <div onclick="go('access')"      style="position:absolute;left:4.5%;top:60.2%;width:44%;height:8.8%;cursor:pointer"></div>
         <div onclick="go('welcomeFlow')" style="position:absolute;left:51.5%;top:60.2%;width:44%;height:8.8%;cursor:pointer"></div>
         <div onclick="go('reserve')"     style="position:absolute;left:4.5%;top:69.4%;width:44%;height:8.8%;cursor:pointer"></div>
@@ -176,7 +187,7 @@ a.cta{text-decoration:none;display:block}
   <!-- 0-2. 予約について -->
   <section class="screen" data-scr="reserve">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">予約について</span></div>
-    <div class="body" style="padding:0">
+    <div class="body" style="padding:0;background:#937b65">
       <img src="../assets/inquiry_reserve.png" alt="Likoは全店予約不要です" style="width:100%;display:block">
     </div>
   </section>
@@ -184,7 +195,7 @@ a.cta{text-decoration:none;display:block}
   <!-- 0-3. お問い合わせ -->
   <section class="screen" data-scr="contact">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">お問い合わせ</span></div>
-    <div class="body" style="padding:0">
+    <div class="body" style="padding:0;background:#7d6352">
       <img src="../assets/inquiry_contact.png" alt="直接LINEのメッセージへご連絡ください" style="width:100%;display:block">
     </div>
   </section>
@@ -192,7 +203,7 @@ a.cta{text-decoration:none;display:block}
   <!-- 0-4. よくある質問 -->
   <section class="screen" data-scr="faq">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">よくある質問</span></div>
-    <div class="body" style="padding:0;gap:0">
+    <div class="body" style="padding:0;gap:0;background:#c2a89a">
       <img src="../assets/inquiry_faq1.png" alt="よくある質問 1" style="width:100%;display:block">
       <img src="../assets/inquiry_faq2.png" alt="よくある質問 2" style="width:100%;display:block">
       <img src="../assets/inquiry_faq3.png" alt="よくある質問 3" style="width:100%;display:block">
@@ -202,7 +213,7 @@ a.cta{text-decoration:none;display:block}
   <!-- 0-5. 無人店舗とは？ -->
   <section class="screen" data-scr="unmanned">
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">無人店舗とは？</span></div>
-    <div class="body" style="padding:0;gap:0">
+    <div class="body" style="padding:0;gap:0;background:#d0b4a7">
       <img src="../assets/inquiry_unmanned1.png" alt="無人営業とは 1" style="width:100%;display:block">
       <img src="../assets/inquiry_unmanned2.png" alt="無人営業とは 2" style="width:100%;display:block">
       <img src="../assets/inquiry_unmanned3.png" alt="無人営業とは 3" style="width:100%;display:block">
@@ -291,6 +302,18 @@ a.cta{text-decoration:none;display:block}
       <div class="cta spacer" onclick="restart()">終了する</div>
     </div>
   </section>
+
+  <!-- 右ドロワーメニュー -->
+  <div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <i class="ti ti-x d-close" onclick="closeDrawer()"></i>
+    <div class="d-item" onclick="drawerGo('access')"><i class="ti ti-map-pin"></i>店舗アクセス</div>
+    <div class="d-item" onclick="drawerGo('welcomeFlow')"><i class="ti ti-palette"></i>各店舗でできる体験</div>
+    <div class="d-item" onclick="drawerGo('reserve')"><i class="ti ti-calendar"></i>予約について</div>
+    <div class="d-item" onclick="drawerGo('contact')"><i class="ti ti-mail"></i>お問い合わせ</div>
+    <div class="d-item" onclick="drawerGo('faq')"><i class="ti ti-help"></i>よくある質問</div>
+    <div class="d-item" onclick="drawerGo('unmanned')"><i class="ti ti-building-store"></i>無人店舗とは？</div>
+  </div>
 
   <!-- LINEで質問 入力シート -->
   <div class="sheet-mask" id="sheetMask" onclick="closeAsk()">
@@ -599,6 +622,10 @@ function onEnter(id){
   if(id==='guide') renderGuide();
   if(id==='done') renderDone();
 }
+function openDrawer(){ document.getElementById('drawerMask').classList.add('show'); document.getElementById('drawer').classList.add('show'); }
+function closeDrawer(){ document.getElementById('drawerMask').classList.remove('show'); document.getElementById('drawer').classList.remove('show'); }
+function drawerGo(id){ closeDrawer(); if(history[history.length-1]!==id) go(id); }
+
 function goReview(){
   /* 問い合わせ版：口コミ・お会計は無し＝ガイドが終わったら完了画面へ */
   go('done');
