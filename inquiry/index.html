@@ -816,10 +816,28 @@ function toast(msg){
 
 /* ====== 起動（前回の続きがあれば復元＝離脱→復帰しても続きから） ====== */
 renderAreaChips();
+/* リッチメニュー用ディープリンク（?screen=access / store / reserve / contact / faq / unmanned）
+   LIFF経由だと初回は liff.state の中に入って届くことがあるため両方を見る（2026-09-27） */
+function deepLinkTarget(){
+  try{
+    const qs = new URLSearchParams(location.search);
+    let v = qs.get('screen');
+    if(!v && qs.get('liff.state')){
+      v = new URLSearchParams(qs.get('liff.state').replace(/^\?/,'')).get('screen');
+    }
+    if(v === 'experience') v = 'store';
+    return ['access','store','reserve','contact','faq','unmanned'].includes(v) ? v : null;
+  }catch(e){ return null; }
+}
+
+const deepLink = deepLinkTarget();
 const saved = loadProgress();
 const last = saved && saved.history && saved.history[saved.history.length-1];
 try{
-if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store' && last!=='top'){
+if(deepLink){
+  history = ["top", deepLink];   // 戻るとTOPに出る
+  onEnter(deepLink); show(deepLink);
+}else if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store' && last!=='top'){
   history = saved.history;
   Object.assign(state, saved.state);
   /* 復帰時は保存時点のスナップショットではなく最新の定義データに引き直す
