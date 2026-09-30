@@ -543,7 +543,7 @@ let history = ["top"];
 /* ====== 進捗キャッシュ（本番はLINE内ブラウザに保存＝離脱→復帰で続きから） ====== */
 const LS_KEY = 'liko_inquiry_progress_v1';  // 店舗改名(2026-08)以前の旧キャッシュを無効化するためv2
 function saveProgress(){
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({history, state})); }catch(e){}
+  /* 問い合わせ版は進捗を記憶しない（2026-09-30今枝指示：リンクから開いても前回ページに戻ってしまうため） */
 }
 function loadProgress(){
   try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; }
@@ -831,40 +831,13 @@ function deepLinkTarget(){
 }
 
 const deepLink = deepLinkTarget();
-const saved = loadProgress();
-const last = saved && saved.history && saved.history[saved.history.length-1];
-try{
+try{ localStorage.removeItem(LS_KEY); }catch(e){}  // 旧バージョンで保存された進捗も消す
 if(deepLink){
   history = ["top", deepLink];   // 戻るとTOPに出る
   onEnter(deepLink); show(deepLink);
-}else if(saved && last && last!=='line' && last!=='flower' && last!=='done' && last!=='store' && last!=='top'){
-  history = saved.history;
-  Object.assign(state, saved.state);
-  /* 復帰時は保存時点のスナップショットではなく最新の定義データに引き直す
-     （メニュー改定後に古い店舗・体験データを引きずらないため。2026-09-09） */
-  if(state.store){
-    const fresh = STORES.find(s => s.name === state.store.name);
-    if(fresh){ state.store = fresh; } else { restart(); throw ''; }
-  }
-  if(state.activity){
-    const freshA = ACT[state.activity.id];
-    if(freshA && (!state.store || (state.store.offers||[]).includes(freshA.id))){
-      state.activity = freshA;
-      if(state.plan){
-        const plans = freshA.plans || DEFAULT_PLANS;
-        state.plan = plans.find(p => p.name === state.plan.name) || null;
-        if(!state.plan){ restart(); throw ''; }
-      }
-    } else { restart(); throw ''; }
-  }
-  if(last==='guide') state.guideStep = Math.min(state.guideStep||0, Math.max(0, guideTotal()-1));
-  onEnter(last);
-  show(last);
-  setTimeout(()=>toast('前回の続きから再開しました'), 500);
 }else{
   onEnter('top'); show('top');
 }
-}catch(e){ /* restart()済み（保存データが現行定義と不整合だった場合） */ }
 </script>
 </body>
 </html>
