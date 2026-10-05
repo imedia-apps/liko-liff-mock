@@ -163,14 +163,16 @@ a.cta{text-decoration:none;display:block}
     <div class="body" style="padding:0;gap:0;background:#e3cebc">
       <div style="position:relative;width:100%">
         <img src="../assets/inquiry_top.png" alt="思い出作りなら、Liko。" style="width:100%;display:block">
-        <!-- 画像内ボタンに合わせた透明タップ領域（%座標・6ボタン版トップ画像基準） -->
+        <!-- 画像内ボタンに合わせた透明タップ領域（%座標・8ボタン版トップ画像を実測。2026-10-05） -->
         <div onclick="openDrawer()"      style="position:absolute;left:81%;top:0.8%;width:17%;height:4.6%;cursor:pointer"></div>
-        <div onclick="go('access')"      style="position:absolute;left:4.5%;top:60.2%;width:44%;height:8.8%;cursor:pointer"></div>
-        <div onclick="go('welcomeFlow')" style="position:absolute;left:51.5%;top:60.2%;width:44%;height:8.8%;cursor:pointer"></div>
-        <div onclick="go('reserve')"     style="position:absolute;left:4.5%;top:69.4%;width:44%;height:8.8%;cursor:pointer"></div>
-        <div onclick="go('contact')"     style="position:absolute;left:51.5%;top:69.4%;width:44%;height:8.8%;cursor:pointer"></div>
-        <div onclick="go('faq')"         style="position:absolute;left:4.5%;top:78.5%;width:44%;height:6.8%;cursor:pointer"></div>
-        <div onclick="go('unmanned')"    style="position:absolute;left:51.5%;top:78.5%;width:44%;height:6.8%;cursor:pointer"></div>
+        <div onclick="go('access')"      style="position:absolute;left:4.5%;top:60.0%;width:43.5%;height:8.4%;cursor:pointer"></div>
+        <div onclick="go('welcomeFlow')" style="position:absolute;left:48.9%;top:60.0%;width:46.6%;height:8.4%;cursor:pointer"></div>
+        <div onclick="go('reserve')"     style="position:absolute;left:4.5%;top:68.8%;width:43.5%;height:8.2%;cursor:pointer"></div>
+        <div onclick="go('contact')"     style="position:absolute;left:48.9%;top:68.8%;width:46.6%;height:8.2%;cursor:pointer"></div>
+        <div onclick="go('faq')"         style="position:absolute;left:4.5%;top:77.4%;width:43.5%;height:7.0%;cursor:pointer"></div>
+        <div onclick="go('unmanned')"    style="position:absolute;left:48.9%;top:77.4%;width:46.6%;height:7.0%;cursor:pointer"></div>
+        <a href="https://www.instagram.com/canvas.art.liko" target="_blank" rel="noopener" style="position:absolute;left:4.5%;top:84.8%;width:43.5%;height:6.7%;cursor:pointer"></a>
+        <a href="https://likoshop.base.ec/" target="_blank" rel="noopener" style="position:absolute;left:48.9%;top:84.8%;width:46.6%;height:6.7%;cursor:pointer"></a>
       </div>
     </div>
   </section>
@@ -313,6 +315,8 @@ a.cta{text-decoration:none;display:block}
     <div class="d-item" onclick="drawerGo('contact')"><i class="ti ti-mail"></i>お問い合わせ</div>
     <div class="d-item" onclick="drawerGo('faq')"><i class="ti ti-help"></i>よくある質問</div>
     <div class="d-item" onclick="drawerGo('unmanned')"><i class="ti ti-building-store"></i>無人店舗とは？</div>
+    <a class="d-item" href="https://www.instagram.com/canvas.art.liko" target="_blank" rel="noopener" onclick="closeDrawer()" style="text-decoration:none;color:inherit"><i class="ti ti-brand-instagram"></i>Instagram</a>
+    <a class="d-item" href="https://likoshop.base.ec/" target="_blank" rel="noopener" onclick="closeDrawer()" style="text-decoration:none;color:inherit"><i class="ti ti-shopping-cart"></i>オンラインショップ</a>
   </div>
 
   <!-- LINEで質問 入力シート -->
