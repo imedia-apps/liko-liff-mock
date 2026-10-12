@@ -165,6 +165,7 @@ a.cta{text-decoration:none;display:block}
         <img src="../assets/inquiry_top.png" alt="思い出作りなら、Liko。" style="width:100%;display:block">
         <!-- 画像内ボタンに合わせた透明タップ領域（%座標・8ボタン版トップ画像を実測。2026-10-05） -->
         <div onclick="openDrawer()"      style="position:absolute;left:81%;top:0.8%;width:17%;height:4.6%;cursor:pointer"></div>
+        <div id="langBtn" onclick="toggleLang()" style="position:absolute;left:4%;top:1.4%;font-size:12px;padding:5px 13px;border-radius:15px;background:rgba(255,255,255,.92);color:#6B5544;border:1px solid #E7DCCB;cursor:pointer;user-select:none">English</div>
         <div onclick="go('access')"      style="position:absolute;left:4.5%;top:60.0%;width:43.5%;height:8.4%;cursor:pointer"></div>
         <div onclick="go('welcomeFlow')" style="position:absolute;left:48.9%;top:60.0%;width:46.6%;height:8.4%;cursor:pointer"></div>
         <div onclick="go('reserve')"     style="position:absolute;left:4.5%;top:68.8%;width:43.5%;height:8.2%;cursor:pointer"></div>
@@ -317,6 +318,7 @@ a.cta{text-decoration:none;display:block}
     <div class="d-item" onclick="drawerGo('unmanned')"><i class="ti ti-building-store"></i>無人店舗とは？</div>
     <a class="d-item" href="https://www.instagram.com/canvas.art.liko" target="_blank" rel="noopener" onclick="closeDrawer()" style="text-decoration:none;color:inherit"><i class="ti ti-brand-instagram"></i>Instagram</a>
     <a class="d-item" href="https://likoshop.base.ec/" target="_blank" rel="noopener" onclick="closeDrawer()" style="text-decoration:none;color:inherit"><i class="ti ti-shopping-cart"></i>オンラインショップ</a>
+    <div class="d-item" id="langBtnDrawer" onclick="toggleLang()"><i class="ti ti-language"></i>English</div>
   </div>
 
   <!-- LINEで質問 入力シート -->
@@ -842,6 +844,176 @@ if(deepLink){
 }else{
   onEnter('top'); show('top');
 }
+
+/* ====== 英語表示オーバーレイ（2026-10-12・工数最小方式） ======
+   描画コードには触れず、表示済みテキストを辞書で日英置換する監視レイヤー。
+   ガイド等の画像は _en 付きファイルがあれば自動で使い、無ければ日本語版のまま（onerrorで自動フォールバック）。 */
+let LANG = 'ja';
+try{ LANG = localStorage.getItem('liko_lang') || 'ja'; }catch(e){}
+
+const EN = {
+  // L-02（問い合わせ版）固有
+  "店舗アクセス":"Store Access","店舗をタップするとGoogleマップが開きます":"Tap a store to open Google Maps",
+  "予約について":"Reservations","よくある質問":"FAQ","無人店舗とは？":"About Self-Service Stores",
+  "各店舗でできる体験":"Experiences by Store","オンラインショップ":"Online Shop",
+  "作り方ガイドは以上です":"That's the end of the guide","ご来店お待ちしております ♡":"We look forward to your visit ♡",
+  // 画面タイトル・共通UI
+  "店舗を選ぶ":"Choose a Store","体験を選ぶ":"Choose an Experience","プランを選ぶ":"Choose a Plan",
+  "料金のご案内":"Pricing","お問い合わせ":"Contact","作り方ガイド":"How-to Guide","レビューのご協力":"Review & Gift","お会計":"Payment",
+  "ようこそ ♡":"Welcome ♡","体験メニューを選んでください":"Please choose an experience",
+  "店名・エリアで探す":"Search by store or area","該当する店舗がありません":"No stores found",
+  "すべて":"All","大阪":"Osaka","東京":"Tokyo","京都":"Kyoto","横浜":"Yokohama","兵庫":"Hyogo","愛知":"Aichi","奈良":"Nara","福岡":"Fukuoka",
+  "無人":"Self-service","有人":"Staffed","土日有人":"Staffed Sat/Sun",
+  "予約不要":"No reservation needed","8月オープン":"Opened in August","9月1日オープン":"Opened Sep 1","10月1日オープン":"Opened Oct 1",
+  "LINEで質問する（11-19時）":"Ask us on LINE (11:00–19:00)","作り方で困ったら質問":"Stuck? Ask us on LINE",
+  "LINEで質問する":"Ask us on LINE","送信する":"Send","閉じる":"Close",
+  "困っていることを入力してください（例：留め具のつけ方がわかりません）":"Type your question (e.g. How do I attach the clasp?)",
+  "プランを選んでください":"Select a plan","所要時間":"Duration","お支払い":"Payment","（税込）":"(tax incl.)",
+  "クレジット / PayPay / 現金":"Credit / PayPay / Cash","現金 / カード / PayPay":"Cash / Card / PayPay","カード / PayPay":"Card / PayPay",
+  "※ この店舗は現金でのお支払いができません":"* This store does not accept cash",
+  "現金・カード・PayPay":"Cash / Card / PayPay","カード・PayPay（現金不可）":"Card / PayPay (no cash)",
+  "理解しました":"I Understand","次へ":"Next","前のステップに戻る":"Previous step",
+  "作り終わった → 次へ":"Finished → Next","選び終わった → 次へ":"Done choosing → Next",
+  "投稿でお花を1本プレゼント ♡":"Post a review & get a free flower ♡","口コミを書きにいく":"Write a Google review","そのまま会計へ進む":"Skip to payment",
+  "支払い完了された方はこちら":"I have completed payment","終了する":"Finish",
+  "お会計が完了しました":"Payment complete","ご退店いただけます":"You are free to leave","本日はありがとうございました ♡":"Thank you for visiting ♡",
+  "よろしければGoogleレビューもお願いします ♡":"We'd love a Google review too ♡",
+  "レビューありがとうございます！お花を1本プレゼント♡":"Thank you for your review! Enjoy a free flower ♡",
+  "スタッフにこの画面をお見せください！":"Please show this screen to our staff!",
+  "※スタッフ不在時はLINEにてこの画面を送ってください。":"* If no staff is present, please send this screen via LINE.",
+  "スタッフと一緒におつくりいただくワークショップです":"This workshop is made together with our staff",
+  "お近くのスタッフにお声がけください♪":"Please ask a nearby staff member ♪",
+  "お近くにスタッフが見当たらないときは、下のボタンから呼び出しできます。":"If no staff is around, you can call them with the button below.",
+  "スタッフを呼び出す":"Call Staff","LINEで連絡する（11-19時）":"Contact us on LINE (11:00–19:00)",
+  // トースト
+  "質問を送りました。返信はこのトーク画面に届きます":"Your message was sent. Replies will appear in this chat.",
+  "質問を送りました。返信はLINEのトーク画面に届きます（この画面はそのまま残ります）":"Your message was sent. Replies will arrive in the LINE chat.",
+  "送信できませんでした。お手数ですがトーク画面から直接メッセージをお送りください":"Could not send. Please message us directly in the LINE chat.",
+  "Googleマップを開きました。書き終えたらこの画面に戻って会計へ♪":"Google Maps opened. Come back here when you're done ♪",
+  "Googleマップ（店舗ページ）へ移動します（デモ）":"Opening Google Maps (demo)",
+  "スタッフを呼び出しました。その場で少々お待ちください♪（デモ）":"Staff has been called. Please wait a moment ♪",
+  "前回の続きから再開しました":"Resumed from where you left off",
+  // 店舗名
+  "中崎町":"Nakazakicho","大阪天満":"Osaka-Temma","西天満":"Nishi-Temma","コリアンタウン鶴橋":"Tsuruhashi Koreatown",
+  "大阪心斎橋":"Osaka Shinsaibashi","心斎橋アメ村":"Shinsaibashi Amemura","南堀江":"Minami-Horie",
+  "神戸元町":"Kobe Motomachi","祇園":"Gion","渋谷":"Shibuya","渋谷2号":"Shibuya No.2","名古屋栄":"Nagoya Sakae","名古屋駅前":"Nagoya Station",
+  "池袋":"Ikebukuro","浅草":"Asakusa","浅草2号":"Asakusa No.2","表参道原宿":"Omotesando-Harajuku",
+  "横浜駅前":"Yokohama Station","横浜中華街":"Yokohama Chinatown","福岡天神":"Fukuoka Tenjin",
+  // 体験名
+  "スネークブレスレット作り":"Snake Bracelet Making","枯れないお花購入":"Everlasting Flower Purchase","キャンバスアート":"Canvas Art",
+  "チェーンアクセサリー作り":"Chain Accessory Making","カスタムグッズづくり":"Custom Goods Making","カスタムキーボード":"Custom Keyboard",
+  "コインリング":"Coin Ring","アイロンビーズ":"Iron Beads","カスタムメガネ":"Custom Glasses","香りづくり体験":"Perfume Making","お清めスプレー作り":"Purification Spray Making",
+  // プラン名・注記
+  "一般プラン":"Regular Plan","学割プラン":"Student Plan","付け放題プラン":"Unlimited Parts Plan","パーツのみ購入":"Parts Only","パーツ20個プラン":"20-Parts Plan",
+  "60分プラン":"60-min Plan","180分プラン":"180-min Plan","1個プラン":"1-Piece Plan","4個プラン":"4-Piece Plan",
+  "お持ち込みメガネ・サングラス":"Bring Your Own Glasses",
+  "お好きなパーツを20個お選びいただけます":"Choose any 20 parts you like",
+  "お持ち込みのメガネ・サングラスをカスタムできます":"Customize your own glasses or sunglasses",
+  "キャンバスは大・小サイズから選べます":"Canvas available in large or small size","小サイズのみ":"Small size only",
+  "パーツ付け放題":"Unlimited parts","ブーケ包装 無料・手提げ袋 ＋¥100":"Bouquet wrapping free / paper bag +¥100",
+  "ミラー・コーム・ボールペン・キーチャーム等（アイテムにより価格が変わります）":"Mirror, comb, pen, key charm, etc. (price varies by item)",
+  "追加30分 ¥500":"Extra 30 min ¥500","1本 ¥600〜":"¥600+ per flower","¥1,500〜":"¥1,500+","60分〜":"60 min+",
+  "南堀江店限定":"Minami-Horie store only","約40分・スタッフと一緒に":"approx. 40 min · with staff",
+  // 店舗の案内文
+  "スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。":"For Snake Bracelet Making, please visit our Nakazakicho store (10-min walk, no reservation needed).",
+  "スネークネックレスを作成される方は、スネークブレスレットをお選びください♪":"To make a snake necklace, please choose Snake Bracelet ♪",
+};
+
+const PAT = [
+  [/^(\d+)店舗$/, m => m[1] + " stores"],
+  [/^(.+)エリア$/, m => trJa(m[1]) + " area"],
+  [/^(.+)店へようこそ\s*$/, m => "Welcome to " + trJa(m[1]) + " "],
+  [/^(.+)で進む$/, m => "Continue with " + trJa(m[1])],
+  [/^ステップ\s?(\d+)\s*\/\s*(\d+)$/, m => "Step " + m[1] + " / " + m[2]],
+  [/^ステップ\s?(\d+)$/, m => "Step " + m[1]],
+  [/^約(\d+)分$/, m => "approx. " + m[1] + " min"],
+  [/^(\d+)分$/, m => m[1] + " min"],
+  [/^「(.+)」の情報も一緒に届くので、状況をイチから説明しなくて大丈夫です$/,
+    m => "Details of “" + m[1] + "” are attached automatically — no need to explain from scratch"],
+];
+
+function trJa(t){
+  if(EN[t]) return EN[t];
+  for(const [re,fn] of PAT){ const m = t.match(re); if(m) return fn(m); }
+  if(t.includes("・")){
+    const parts = t.split("・").map(x=>x.trim());
+    const tr = parts.map(x => EN[x] || (PAT.find(([re])=>re.test(x)) ? trJa(x) : null));
+    if(tr.every(x=>x!==null)) return tr.join(" / ");
+    if(tr.some(x=>x!==null)) return parts.map((x,i)=>tr[i]||x).join(" / ");
+  }
+  return null;
+}
+
+const EN_IMG_MISSING = new Set();
+function translateImgs(root){
+  root.querySelectorAll('img').forEach(img=>{
+    const cur = img.getAttribute('src') || '';
+    if(LANG==='en'){
+      if(/_en\.png$/.test(cur)) return;
+      if(!/\.png$/.test(cur)) return;
+      const en = cur.replace(/\.png$/, '_en.png');
+      if(EN_IMG_MISSING.has(en)) return;
+      img.dataset.jaSrc = cur;
+      img.onerror = function(){ EN_IMG_MISSING.add(en); this.onerror=null; this.src = this.dataset.jaSrc; };
+      img.src = en;
+    }else{
+      if(img.dataset.jaSrc && /_en\.png$/.test(cur)){ img.onerror=null; img.src = img.dataset.jaSrc; }
+    }
+  });
+}
+
+let _trBusy = false, _trQueued = false;
+function translatePage(){
+  if(_trBusy) return;
+  _trBusy = true;
+  try{
+    const root = document.querySelector('.app');
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let n;
+    while((n = walker.nextNode())){
+      const raw = n.nodeValue; if(!raw) continue;
+      const t = raw.trim(); if(!t) continue;
+      if(LANG==='en'){
+        const tr = trJa(t);
+        if(tr !== null && tr !== t){
+          if(n.__ja === undefined) n.__ja = raw;
+          n.nodeValue = raw.replace(t, tr);
+        }
+      }else if(n.__ja !== undefined){
+        n.nodeValue = n.__ja; delete n.__ja;
+      }
+    }
+    // プレースホルダー
+    [['storeSearch','placeholder'],['askText','placeholder']].forEach(([id,attr])=>{
+      const el = document.getElementById(id); if(!el) return;
+      const cur = el.getAttribute(attr) || '';
+      if(LANG==='en'){
+        const tr = trJa(cur.trim());
+        if(tr){ if(!el.dataset.jaPh) el.dataset.jaPh = cur; el.setAttribute(attr, tr); }
+      }else if(el.dataset.jaPh){ el.setAttribute(attr, el.dataset.jaPh); delete el.dataset.jaPh; }
+    });
+    translateImgs(root);
+    ['langBtn','langBtnDrawer'].forEach(id=>{
+      const btn = document.getElementById(id);
+      if(btn) btn.textContent = (LANG==='en') ? '日本語' : 'English';
+    });
+  } finally {
+    setTimeout(()=>{ _trBusy = false; if(_trQueued){ _trQueued=false; translatePage(); } }, 0);
+  }
+}
+
+function toggleLang(){
+  LANG = (LANG==='en') ? 'ja' : 'en';
+  try{ localStorage.setItem('liko_lang', LANG); }catch(e){}
+  translatePage();
+}
+
+new MutationObserver(()=>{
+  if(_trBusy){ _trQueued = true; return; }
+  requestAnimationFrame(translatePage);
+}).observe(document.querySelector('.app'), {childList:true, subtree:true, characterData:true});
+
+if(LANG==='en') setTimeout(translatePage, 0);
 </script>
 </body>
 </html>
