@@ -228,7 +228,7 @@ a.cta{text-decoration:none;display:block}
     <div class="hdr"><i class="ti ti-chevron-left back" onclick="back()"></i><span class="ttl">レビューのご協力</span></div>
     <div class="body">
       <img src="assets/intro_flower.png" alt="お花" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block">
-      <div class="sub" style="text-align:center;font-family:var(--font-serif);font-size:16px">投稿でお花を1本プレゼント ♡</div>
+      <div class="sub" id="reviewGift" style="text-align:center;font-family:var(--font-serif);font-size:16px">投稿でお花を1本プレゼント ♡</div>
       <a class="cta spacer" id="reviewGoBtn">口コミを書きにいく</a>
       <div class="cta ghost" onclick="state.reviewed=false;go('register')">そのまま会計へ進む</div>
     </div>
@@ -368,17 +368,17 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+西天満店")},
   {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
-  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","perfume","glasses","beads","ring"],
+  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","perfume","glasses","beads","ring"], noReviewGift:true,
    gmap:GM("Liko+大阪心斎橋店")},
   {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
-  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray","flower"], walk:"8月オープン",
+  {name:"南堀江",           area:"大阪", staff:"none",    offers:["spray","flower"], noReviewGift:true, walk:"8月オープン",
    gmap:GM("キャンバスアートリコ+南堀江店")},
   {name:"奈良",             area:"奈良", staff:"none",    offers:["flower","snake","beads"], walk:"9月1日オープン",
    gmap:GM("キャンバスアートリコ+奈良駅前")},
   {name:"神戸元町",         area:"兵庫", staff:"none",    offers:["flower","perfume"],
    gmap:GM("キャンバスアートリコ+神戸元町店")},
-  {name:"京都",             area:"京都", staff:"always",  offers:["chain","flower","art"],
+  {name:"京都",             area:"京都", staff:"always",  offers:["chain","flower","art"], noReviewGift:true,
    gmap:GM("キャンバスアートリコ+京都店")},
   {name:"祇園",             area:"京都", staff:"none",    offers:["flower","snake","pen"],
    gmap:GM("キャンバスアートリコ+祇園店")},
@@ -386,11 +386,11 @@ const STORES = [
    gmap:GM("Liko渋谷店")},
   {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true, noFlower:true,
    gmap:GM("キャンバスアートリコ+渋谷2号店")},
-  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"],
+  {name:"名古屋栄",         area:"愛知", staff:"none",    offers:["flower","snake"], noReviewGift:true,
    gmap:GM("キャンバスアートリコ+名古屋栄店")},
   {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["flower","snake","beads"],
    gmap:GM("キャンバスアートリコ+名古屋駅前店")},
-  {name:"池袋",             area:"東京", staff:"weekend", offers:["flower","snake","art"],
+  {name:"池袋",             area:"東京", staff:"weekend", offers:["flower","snake","art"], noReviewGift:true,
    gmap:GM("Liko+池袋店")},
   {name:"浅草",             area:"東京", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+浅草店")},
@@ -401,7 +401,7 @@ const STORES = [
    gmap:"https://maps.app.goo.gl/iibLvEXZxZsnuKaq9"},
   {name:"横浜駅前",         area:"横浜", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+横浜駅前店")},
-  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["flower","snake"],
+  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["flower","snake"], noReviewGift:true,
    gmap:GM("キャンバスアートリコ+横浜中華街店")},
   {name:"福岡天神",         area:"福岡", staff:"none",    offers:["snake","beads"], noCash:true, walk:"10月1日オープン"},
 ];
@@ -723,6 +723,8 @@ function guidePrev(){
    window.open はスマホ（Safari/LINE内ブラウザ）のポップアップブロックで開かないことがあるため、
    本物の <a href target="_blank"> のリンクとして開く（ブロック対象外） */
 function renderReview(){
+  /* 口コミ100件超の店舗＝お花特典終了（2026-10-13クライアント指示）。口コミのお願い自体は残す */
+  document.getElementById('reviewGift').style.display = (state.store && state.store.noReviewGift) ? 'none' : '';
   const a = document.getElementById('reviewGoBtn');
   if(state.store && state.store.gmap){
     a.setAttribute('href', state.store.gmap);
@@ -751,7 +753,10 @@ function renderRegister(){
 
 /* ====== 完了（退店可能）。レビューを書いた人にはお花引換コードを表示 ====== */
 function renderDone(){
-  const flower = state.reviewed
+  const noGift = state.store && state.store.noReviewGift;
+  const flower = noGift
+    ? (state.reviewed ? `<div class="cap">レビューありがとうございます！</div>` : `<div class="cap">よろしければGoogleレビューもお願いします ♡</div>`)
+    : state.reviewed
     ? `<div class="cap">レビューありがとうございます！お花を1本プレゼント♡<br>スタッフにこの画面をお見せください！<br><span style="font-size:11px;opacity:.85">※スタッフ不在時はLINEにてこの画面を送ってください。</span></div>
        <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.14em;background:#fff;border:1px dashed var(--pink);border-radius:12px;padding:10px 22px">FLOWER-2607</div>`
     : `<div class="cap">よろしければGoogleレビューもお願いします ♡</div>`;
@@ -838,6 +843,7 @@ const EN = {
   "お会計が完了しました":"Payment complete","ご退店いただけます":"You are free to leave","本日はありがとうございました ♡":"Thank you for visiting ♡",
   "よろしければGoogleレビューもお願いします ♡":"We'd love a Google review too ♡",
   "レビューありがとうございます！お花を1本プレゼント♡":"Thank you for your review! Enjoy a free flower ♡",
+  "レビューありがとうございます！":"Thank you for your review!",
   "スタッフにこの画面をお見せください！":"Please show this screen to our staff!",
   "※スタッフ不在時はLINEにてこの画面を送ってください。":"* If no staff is present, please send this screen via LINE.",
   "スタッフと一緒におつくりいただくワークショップです":"This workshop is made together with our staff",
