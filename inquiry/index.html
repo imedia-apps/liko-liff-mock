@@ -413,7 +413,7 @@ const ACTIVITIES = [
    plans:[
      {name:"一般プラン", price:3500},
    ]},
-  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"南堀江店限定",
+  {id:"spray",    name:"お清めスプレー作り",       icon:"ti-spray",     time:"",
    imgFamily:"spray", steps:5,
    plans:[
      {name:"一般プラン", price:2200, imgKey:"ippan"},
@@ -437,7 +437,7 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+西天満店")},
   {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
-  {name:"大阪心斎橋",       area:"大阪", staff:"none",    offers:["snake","chain","perfume","glasses","beads","ring"],
+  {name:"大阪心斎橋",       area:"大阪", staff:"always",    offers:["snake","chain","perfume","glasses","beads","ring"],
    gmap:GM("Liko+大阪心斎橋店")},
   {name:"心斎橋アメ村",     area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+心斎橋アメ村店")},
@@ -451,6 +451,8 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+京都店")},
   {name:"祇園",             area:"京都", staff:"none",    offers:["flower","snake","pen"],
    gmap:GM("キャンバスアートリコ+祇園店")},
+  {name:"渋谷本店",         area:"東京", staff:"always",  offers:["snake","spray"], noFlower:true, walk:"11月1日オープン",
+   gmap:GM("キャンバスアートリコ+渋谷本店")},
   {name:"渋谷",             area:"東京", staff:"none",    offers:["snake"], noFlower:true,
    gmap:GM("Liko渋谷店")},
   {name:"渋谷2号",          area:"東京", staff:"none",    offers:["snake"], noCash:true, noFlower:true,
@@ -459,37 +461,34 @@ const STORES = [
    gmap:GM("キャンバスアートリコ+名古屋栄店")},
   {name:"名古屋駅前",       area:"愛知", staff:"none",    offers:["flower","snake","beads"],
    gmap:GM("キャンバスアートリコ+名古屋駅前店")},
-  {name:"池袋",             area:"東京", staff:"weekend", offers:["flower","snake","art"],
+  {name:"池袋",             area:"東京", staff:"none"  , offers:["flower","snake","art"],
    gmap:GM("Liko+池袋店")},
   {name:"浅草",             area:"東京", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+浅草店")},
-  {name:"浅草2号",          area:"東京", staff:"always",  offers:["snake","glasses"], noFlower:true,
+  {name:"浅草2号",          area:"東京", staff:"always",  offers:["snake","glasses","chain"], noFlower:true,
    gmap:GM("キャンバスアートリコ+浅草2号店")},
-  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["snake"],
+  {name:"表参道原宿",       area:"東京", staff:"always",  offers:["snake","glasses","beads"],
    note:"スネークネックレスを作成される方は、スネークブレスレットをお選びください♪",
    gmap:"https://maps.app.goo.gl/iibLvEXZxZsnuKaq9"},
-  {name:"横浜駅前",         area:"横浜", staff:"none",    offers:["flower","snake"],
+  {name:"横浜2号店",       area:"横浜", staff:"none",    offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+横浜駅前店")},
-  {name:"横浜中華街",       area:"横浜", staff:"none",    offers:["flower","snake"],
+  {name:"横浜1号店（中華街）", area:"横浜", staff:"sometimes", offers:["snake","flower","chain","beads"],
    gmap:GM("キャンバスアートリコ+横浜中華街店")},
   {name:"福岡天神",         area:"福岡", staff:"none",    offers:["snake","beads"], noCash:true, walk:"10月1日オープン"},
 ];
 const AREAS = ["すべて","大阪","東京","京都","横浜","兵庫","愛知","奈良","福岡"];
 
-/* ====== 2026-10-01 メニュー改定（クライアント指示2026-09-09・一律10/1切替） ====== */
+/* ====== 2026-11-20 渋谷本店に香水追加（クライアント指示2026-10-23・11/20スタート） ====== */
 (function(){
-  if(Date.now() < Date.UTC(2026, 8, 30, 15, 0, 0)) return;  // = 2026-10-01 00:00 JST
-  const upd = {
-    "浅草2号":    ["snake","glasses","chain"],
-    "表参道原宿": ["snake","glasses","beads"],
-    "横浜中華街": ["snake","flower","chain","beads"],
-  };
-  STORES.forEach(s => { if(upd[s.name]) s.offers = upd[s.name]; });
+  if(Date.now() < Date.UTC(2026, 10, 19, 15, 0, 0)) return;  // = 2026-11-20 00:00 JST
+  const s = STORES.find(x => x.name === "渋谷本店");
+  if(s && !s.offers.includes("perfume")) s.offers.push("perfume");
 })();
 const STAFF_TAG = {
   none:    {label:"無人",     cls:""},
   always:  {label:"有人",     cls:"on"},
   weekend: {label:"土日有人", cls:"on"},
+  sometimes: {label:"時々有人", cls:"on"},
 };
 
 /* プラン定義の無い体験用の汎用プラン（画像なし体験のデモ表示用） */
@@ -864,7 +863,8 @@ const EN = {
   "店名・エリアで探す":"Search by store or area","該当する店舗がありません":"No stores found",
   "すべて":"All","大阪":"Osaka","東京":"Tokyo","京都":"Kyoto","横浜":"Yokohama","兵庫":"Hyogo","愛知":"Aichi","奈良":"Nara","福岡":"Fukuoka",
   "無人":"Self-service","有人":"Staffed","土日有人":"Staffed Sat/Sun",
-  "予約不要":"No reservation needed","8月オープン":"Opened in August","9月1日オープン":"Opened Sep 1","10月1日オープン":"Opened Oct 1",
+  "予約不要":"No reservation needed","8月オープン":"Opened in August","9月1日オープン":"Opened Sep 1","10月1日オープン":"Opened Oct 1","11月1日オープン":"Opens Nov 1","時々有人":"Occasionally staffed",
+  "渋谷本店":"Shibuya Main Store","横浜1号店（中華街）":"Yokohama No.1 (Chinatown)","横浜2号店":"Yokohama No.2",
   "LINEで質問する（11-19時）":"Ask us on LINE (11:00–19:00)","作り方で困ったら質問":"Stuck? Ask us on LINE",
   "LINEで質問する":"Ask us on LINE","送信する":"Send","閉じる":"Close",
   "困っていることを入力してください（例：留め具のつけ方がわかりません）":"Type your question (e.g. How do I attach the clasp?)",
