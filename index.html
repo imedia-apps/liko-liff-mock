@@ -361,8 +361,6 @@ const STORES = [
   {name:"大阪天満",         area:"大阪", staff:"none",    offers:["flower","art","keyboard"],
    note:"スネークブレスレット作りをご希望の方は、徒歩10分の中崎町店（予約不要）へどうぞ。",
    gmap:GM("キャンバスアートリコ+大阪天満店")},
-  {name:"西天満",           area:"大阪", staff:"none",    offers:["flower","snake"], noCash:true,
-   gmap:GM("キャンバスアートリコ+西天満店")},
   {name:"コリアンタウン鶴橋", area:"大阪", staff:"always",  offers:["flower","snake"],
    gmap:GM("キャンバスアートリコ+コリアンタウン鶴橋店")},
   {name:"大阪心斎橋",       area:"大阪", staff:"always",    offers:["snake","chain","perfume","glasses","beads","ring"], noReviewGift:true,
@@ -667,7 +665,7 @@ function renderFee(){
     </div>`;
   document.getElementById('feeTitle').style.display = 'none';
   document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
-  // 支払い方法（2026-08-02クライアント指示：カード・PayPayもレジ支払い＝スマホ決済の注記は出さない。西天満は現金不可）
+  // 支払い方法（2026-08-02クライアント指示：カード・PayPayもレジ支払い＝スマホ決済の注記は出さない。noCash店＝現金不可）
   const noteEl = document.getElementById('feeNote');
   if(state.store.noCash){
     document.getElementById('feePay').textContent = 'カード / PayPay';
@@ -854,7 +852,7 @@ const EN = {
   "スタッフを呼び出しました。その場で少々お待ちください♪（デモ）":"Staff has been called. Please wait a moment ♪",
   "前回の続きから再開しました":"Resumed from where you left off",
   // 店舗名
-  "中崎町":"Nakazakicho","大阪天満":"Osaka-Temma","西天満":"Nishi-Temma","コリアンタウン鶴橋":"Tsuruhashi Koreatown",
+  "中崎町":"Nakazakicho","大阪天満":"Osaka-Temma","コリアンタウン鶴橋":"Tsuruhashi Koreatown",
   "大阪心斎橋":"Osaka Shinsaibashi","心斎橋アメ村":"Shinsaibashi Amemura","南堀江":"Minami-Horie",
   "神戸元町":"Kobe Motomachi","祇園":"Gion","渋谷":"Shibuya","渋谷2号":"Shibuya No.2","名古屋栄":"Nagoya Sakae","名古屋駅前":"Nagoya Station",
   "池袋":"Ikebukuro","浅草":"Asakusa","浅草2号":"Asakusa No.2","表参道原宿":"Omotesando-Harajuku",
