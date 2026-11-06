@@ -122,7 +122,8 @@ a.cta{text-decoration:none;display:block}
 .pay{display:flex;gap:14px;justify-content:center;color:#7E6A55;font-size:28px}
 
 /* 下部「LINEで質問」バー（メインCTAと同サイズに統一・2026-08-11） */
-.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#fff;font-size:16px;padding:14px;border-radius:12px;cursor:pointer;flex:none}
+.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(180deg,#1FD56A,#06B24C);color:#fff;font-size:16px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;flex:none;box-shadow:0 4px 0 #048A3C,0 6px 12px rgba(4,138,60,.28);transition:transform .08s,box-shadow .08s;user-select:none}
+.qbar:active{transform:translateY(3px);box-shadow:0 1px 0 #048A3C,0 2px 4px rgba(4,138,60,.2)}
 
 /* タブナビ */
 .nav{display:flex;border-top:1px solid var(--line);background:#fff;flex:none}
