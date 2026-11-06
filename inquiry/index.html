@@ -43,38 +43,38 @@ body{
 
 /* ヘッダー */
 .hdr{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);flex:none}
-.hdr .back{color:#9A8167;font-size:22px;cursor:pointer;width:24px}
+.hdr .back{color:#9A8167;font-size:24px;cursor:pointer;width:24px}
 .hdr .back.hide{visibility:hidden}
-.hdr .ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d)}
-.brand{font-family:var(--font-serif);font-size:20px;color:var(--brown);letter-spacing:.04em;text-align:center;width:100%}
-.brand small{display:block;font-size:9px;letter-spacing:.34em;color:var(--pink);margin-top:2px}
+.hdr .ttl{font-family:var(--font-serif);font-size:18px;color:var(--brown-d)}
+.brand{font-family:var(--font-serif);font-size:22px;color:var(--brown);letter-spacing:.04em;text-align:center;width:100%}
+.brand small{display:block;font-size:11px;letter-spacing:.34em;color:var(--pink);margin-top:2px}
 
 /* 本文 */
 .body{padding:16px;flex:1;display:flex;flex-direction:column;gap:11px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.cap{font-size:12px;color:var(--muted)}
-.sub{font-size:14px;color:var(--brown-d);font-weight:600}
+.cap{font-size:14px;color:var(--muted)}
+.sub{font-size:16px;color:var(--brown-d);font-weight:600}
 .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
-.circle{width:92px;height:92px;border-radius:50%;background:#EFE3D2;display:flex;align-items:center;justify-content:center;color:var(--brown);font-size:42px}
+.circle{width:92px;height:92px;border-radius:50%;background:#EFE3D2;display:flex;align-items:center;justify-content:center;color:var(--brown);font-size:44px}
 .circle.green{background:var(--green);color:#fff}
 
 /* 検索・チップ */
-.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:13px;flex:none}
-.search input{border:0;outline:0;font-size:13px;background:transparent;flex:1;color:var(--ink);font-family:inherit}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:15px;flex:none}
+.search input{border:0;outline:0;font-size:15px;background:transparent;flex:1;color:var(--ink);font-family:inherit}
 .search input::placeholder{color:var(--muted)}
 .chips{display:flex;gap:7px;flex-wrap:wrap;flex:none}
-.chip{font-size:12px;padding:6px 13px;border-radius:15px;background:#EDE4D5;color:var(--brown-d);cursor:pointer;user-select:none}
+.chip{font-size:14px;padding:6px 13px;border-radius:15px;background:#EDE4D5;color:var(--brown-d);cursor:pointer;user-select:none}
 .chip.on{background:var(--brown-d);color:var(--scr)}
 
 /* カード */
 .card{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:transform .08s}
 .card:active{transform:scale(.98)}
-.card .ic{color:#9A8167;font-size:22px;flex:none}
-.card .nm{font-size:14px;color:var(--ink)}
-.card .meta{font-size:11px;color:var(--muted);margin-top:2px}
+.card .ic{color:#9A8167;font-size:24px;flex:none}
+.card .nm{font-size:16px;color:var(--ink)}
+.card .meta{font-size:13px;color:var(--muted);margin-top:2px}
 .card .grow{flex:1;min-width:0}
-.tag{font-size:10px;padding:3px 9px;border-radius:10px;background:#EDE4D5;color:#8A7461;flex:none}
+.tag{font-size:12px;padding:3px 9px;border-radius:10px;background:#EDE4D5;color:#8A7461;flex:none}
 .tag.on{background:#E7C8CC;color:#A85C6B}
-.count{font-size:11px;color:var(--muted);flex:none}
+.count{font-size:13px;color:var(--muted);flex:none}
 
 /* プラン */
 .plan{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;position:relative;transition:transform .08s}
@@ -82,53 +82,55 @@ body{
 .plan.sel{border:2px solid var(--brown-d);background:#FBF7F0}
 .plan.hot{border:1.5px solid var(--pink)}
 .plan.hot.sel{border:2px solid var(--pink)}
-.plan .pn{font-size:14px;color:var(--ink)}
-.plan .price{font-size:14px;color:var(--brown-d);font-weight:700}
-.badge{position:absolute;top:-9px;right:12px;background:var(--pink);color:#fff;font-size:10px;padding:2px 10px;border-radius:10px}
+.plan .pn{font-size:16px;color:var(--ink)}
+.plan .price{font-size:16px;color:var(--brown-d);font-weight:700}
+.badge{position:absolute;top:-9px;right:12px;background:var(--pink);color:#fff;font-size:12px;padding:2px 10px;border-radius:10px}
 
 /* 写真プレースホルダ */
-.photo{background:#EAE0D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#B09A7E;font-size:12px;flex:none}
-.photo i{font-size:28px}
+.photo{background:#EAE0D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#B09A7E;font-size:14px;flex:none}
+.photo i{font-size:30px}
 
 /* 料金枠 */
-.fee{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px 14px;font-size:13px;display:flex;flex-direction:column;gap:8px;flex:none}
+.fee{background:#fff;border:1px solid #EAE0D0;border-radius:12px;padding:13px 14px;font-size:15px;display:flex;flex-direction:column;gap:8px;flex:none}
 .row{display:flex;justify-content:space-between}
-.note{font-size:11px;color:#C07A6E}
-.banner{background:#FBF3F2;border:1px solid #EDD3D3;border-radius:11px;padding:11px 12px;font-size:12px;color:#A85C6B;display:flex;gap:8px;align-items:flex-start}
-.banner i{font-size:16px;flex:none;margin-top:1px}
+.note{font-size:13px;color:#C07A6E}
+.banner{background:#FBF3F2;border:1px solid #EDD3D3;border-radius:11px;padding:11px 12px;font-size:14px;color:#A85C6B;display:flex;gap:8px;align-items:flex-start}
+.banner i{font-size:18px;flex:none;margin-top:1px}
 
 /* ステップ進行 */
-.dots{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--muted);flex:none}
+.dots{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);flex:none}
 .dot{width:8px;height:8px;border-radius:50%;background:#D8CBB5}
 .dot.on{background:var(--pink)}
 
 /* CTA */
-.cta{background:var(--brown-d);color:var(--scr);text-align:center;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;flex:none;transition:transform .08s;user-select:none}
+.cta{background:linear-gradient(180deg,var(--brown),var(--brown-d));color:var(--scr);text-align:center;padding:14px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;flex:none;transition:transform .08s,box-shadow .08s;user-select:none;box-shadow:0 4px 0 #4A3B2E,0 6px 12px rgba(74,59,46,.28)}
 a.cta{text-decoration:none;display:block}
-.cta:active{transform:scale(.98)}
-.cta.green{background:var(--green)}
-.cta.ghost{background:transparent;color:var(--muted);padding:9px;font-size:13px}
-.cta.disabled{background:#D8CBB5;color:#fff;pointer-events:none}
+.cta:active{transform:translateY(3px);box-shadow:0 1px 0 #4A3B2E,0 2px 4px rgba(74,59,46,.2)}
+.cta.green{background:linear-gradient(180deg,#1FD56A,#06B24C);box-shadow:0 4px 0 #048A3C,0 6px 12px rgba(4,138,60,.28)}
+.cta.green:active{box-shadow:0 1px 0 #048A3C,0 2px 4px rgba(4,138,60,.2)}
+.cta.ghost{background:transparent;color:var(--muted);padding:9px;font-size:15px;font-weight:400;box-shadow:none}
+.cta.ghost:active{transform:scale(.98)}
+.cta.disabled{background:#D8CBB5;color:#fff;pointer-events:none;box-shadow:0 4px 0 #BFAE93,0 6px 12px rgba(191,174,147,.25)}
 .spacer{margin-top:auto}
 
 /* レビュー手順 */
-.rev{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid #EAE0D0;border-radius:11px;padding:11px 12px;font-size:13px}
-.num{width:22px;height:22px;border-radius:50%;background:var(--brown-d);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
-.stars{color:#E8B44A;font-size:15px;letter-spacing:2px}
+.rev{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid #EAE0D0;border-radius:11px;padding:11px 12px;font-size:15px}
+.num{width:22px;height:22px;border-radius:50%;background:var(--brown-d);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.stars{color:#E8B44A;font-size:17px;letter-spacing:2px}
 
 /* 支払いアイコン */
-.pay{display:flex;gap:14px;justify-content:center;color:#7E6A55;font-size:26px}
+.pay{display:flex;gap:14px;justify-content:center;color:#7E6A55;font-size:28px}
 
 /* 下部「LINEで質問」バー（メインCTAと同サイズに統一・2026-08-11） */
-.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#fff;font-size:14px;padding:14px;border-radius:12px;cursor:pointer;flex:none}
+.qbar{margin:0 16px 14px;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:#fff;font-size:16px;padding:14px;border-radius:12px;cursor:pointer;flex:none}
 
 /* タブナビ */
 .nav{display:flex;border-top:1px solid var(--line);background:#fff;flex:none}
-.nav div{flex:1;text-align:center;padding:9px 0;font-size:9px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
-.nav i{font-size:18px}
+.nav div{flex:1;text-align:center;padding:9px 0;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav i{font-size:20px}
 
 /* トースト */
-.toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);max-width:82%;background:rgba(74,59,46,.96);color:#fff;font-size:12px;line-height:1.55;padding:11px 16px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;text-align:center;z-index:20}
+.toast{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);max-width:82%;background:rgba(74,59,46,.96);color:#fff;font-size:14px;line-height:1.55;padding:11px 16px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;text-align:center;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* 右ドロワーメニュー（TOPのハンバーガー） */
@@ -137,22 +139,22 @@ a.cta{text-decoration:none;display:block}
 .drawer{position:absolute;top:0;right:0;bottom:0;width:72%;max-width:300px;background:#F7F2EA;z-index:41;display:none;flex-direction:column;padding:20px 18px;box-shadow:-8px 0 30px rgba(80,60,40,.25);animation:drawerIn .25s ease}
 .drawer.show{display:flex}
 @keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
-.d-close{align-self:flex-end;font-size:22px;color:#9A8167;cursor:pointer;padding:4px}
-.d-item{display:flex;align-items:center;gap:12px;padding:15px 8px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink);cursor:pointer}
-.d-item i{color:#9A8167;font-size:18px}
+.d-close{align-self:flex-end;font-size:24px;color:#9A8167;cursor:pointer;padding:4px}
+.d-item{display:flex;align-items:center;gap:12px;padding:15px 8px;border-bottom:1px solid var(--line);font-size:16px;color:var(--ink);cursor:pointer}
+.d-item i{color:#9A8167;font-size:20px}
 
 /* LINEで質問 入力シート */
 .sheet-mask{position:absolute;inset:0;background:rgba(40,30,22,.38);display:none;align-items:flex-end;z-index:30}
 .sheet-mask.show{display:flex}
 .sheet{background:#fff;width:100%;border-radius:18px 18px 0 0;padding:18px 16px 16px;display:flex;flex-direction:column;gap:10px;animation:sheetUp .28s ease}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
-.sheet-ttl{font-family:var(--font-serif);font-size:16px;color:var(--brown-d);display:flex;align-items:center;gap:7px}
-.sheet-ttl i{color:var(--green);font-size:19px}
-.sheet-cap{font-size:11px;color:var(--muted)}
-.sheet-input{border:1px solid var(--line);border-radius:11px;padding:11px;font-size:13px;font-family:inherit;min-height:90px;resize:none;color:var(--ink);outline:none;background:var(--scr)}
+.sheet-ttl{font-family:var(--font-serif);font-size:18px;color:var(--brown-d);display:flex;align-items:center;gap:7px}
+.sheet-ttl i{color:var(--green);font-size:21px}
+.sheet-cap{font-size:13px;color:var(--muted)}
+.sheet-input{border:1px solid var(--line);border-radius:11px;padding:11px;font-size:15px;font-family:inherit;min-height:90px;resize:none;color:var(--ink);outline:none;background:var(--scr)}
 .sheet-input::placeholder{color:var(--muted)}
-.sheet-ctx{font-size:11px;color:#A85C6B;background:#FBF3F2;border-radius:9px;padding:9px 10px;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
-.sheet-ctx i{font-size:14px;flex:none;margin-top:1px}
+.sheet-ctx{font-size:13px;color:#A85C6B;background:#FBF3F2;border-radius:9px;padding:9px 10px;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.sheet-ctx i{font-size:16px;flex:none;margin-top:1px}
 </style>
 </head>
 <body>
@@ -165,7 +167,7 @@ a.cta{text-decoration:none;display:block}
         <img src="../assets/inquiry_top.png" alt="思い出作りなら、Liko。" style="width:100%;display:block">
         <!-- 画像内ボタンに合わせた透明タップ領域（%座標・8ボタン版トップ画像を実測。2026-10-05） -->
         <div onclick="openDrawer()"      style="position:absolute;left:81%;top:0.8%;width:17%;height:4.6%;cursor:pointer"></div>
-        <div id="langBtn" onclick="toggleLang()" style="position:absolute;left:4%;top:1.4%;font-size:12px;padding:5px 13px;border-radius:15px;background:rgba(255,255,255,.92);color:#6B5544;border:1px solid #E7DCCB;cursor:pointer;user-select:none">English</div>
+        <div id="langBtn" onclick="toggleLang()" style="position:absolute;left:4%;top:1.4%;font-size:14px;padding:5px 13px;border-radius:15px;background:rgba(255,255,255,.92);color:#6B5544;border:1px solid #E7DCCB;cursor:pointer;user-select:none">English</div>
         <div onclick="go('access')"      style="position:absolute;left:4.5%;top:60.0%;width:43.5%;height:8.4%;cursor:pointer"></div>
         <div onclick="go('welcomeFlow')" style="position:absolute;left:48.9%;top:60.0%;width:46.6%;height:8.4%;cursor:pointer"></div>
         <div onclick="go('reserve')"     style="position:absolute;left:4.5%;top:68.8%;width:43.5%;height:8.2%;cursor:pointer"></div>
@@ -643,7 +645,7 @@ function renderAccess(){
     return `<a class="card" href="${href}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
       <i class="ti ti-map-pin ic"></i>
       <div class="grow"><div class="nm">${s.name}</div><div class="meta">${meta}</div></div>
-      <i class="ti ti-external-link" style="color:var(--muted);font-size:16px"></i></a>`;
+      <i class="ti ti-external-link" style="color:var(--muted);font-size:18px"></i></a>`;
   }).join('');
 }
 
@@ -710,12 +712,11 @@ function renderPlans(){
   const a = state.activity;
   const plans = plansOf(a);
   state.plan = null;
-  const hero = INTRO_IMG.has(a.id)
-    ? `<img src="../assets/intro_${a.id}.png" alt="${a.name}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid #EAE0D0;display:block">`
-    : '';
-  // 体験名は画像の下にタイトル表示（2026-08-01 今枝指示：キャプションだと見にくい）
+  // プラン画面の完成品イメージ画像は非表示（2026-11-06クライアント指示：老眼対応で文字を大きく・画像削除。INTRO_IMG定義は復活用に残置）
+  const hero = '';
+  // 体験名はタイトル表示（2026-08-01 今枝指示：キャプションだと見にくい）
   const title = `<div style="text-align:center;margin:2px 0 4px">
-      <div style="font-family:var(--font-serif);font-size:17px;color:var(--brown-d);letter-spacing:.03em">${a.name}</div>
+      <div style="font-family:var(--font-serif);font-size:19px;color:var(--brown-d);letter-spacing:.03em">${a.name}</div>
       ${a.time ? `<div class="cap" style="margin-top:2px">${a.time}</div>` : ''}
     </div>`;
   document.getElementById('planList').innerHTML = hero + title + plans.map((p,i)=>
@@ -742,12 +743,12 @@ function renderFee(){
   const p = state.plan, a = state.activity;
   document.getElementById('feeMedia').innerHTML = `
     <div style="background:#fff;border:1px solid #EAE0D0;border-radius:14px;padding:24px 16px 20px;text-align:center">
-      <div style="font-size:10px;letter-spacing:.3em;color:var(--pink)">PRICE</div>
-      <div style="font-family:var(--font-serif);font-size:20px;color:var(--brown-d);margin-top:10px;letter-spacing:.02em">${a.name}</div>
-      ${p.name !== a.name ? `<div style="font-size:13px;color:var(--muted);margin-top:4px">${p.name}</div>` : ''}
+      <div style="font-size:12px;letter-spacing:.3em;color:var(--pink)">PRICE</div>
+      <div style="font-family:var(--font-serif);font-size:22px;color:var(--brown-d);margin-top:10px;letter-spacing:.02em">${a.name}</div>
+      ${p.name !== a.name ? `<div style="font-size:15px;color:var(--muted);margin-top:4px">${p.name}</div>` : ''}
       <div style="width:34px;height:1px;background:var(--line);margin:12px auto"></div>
-      <div style="font-family:var(--font-serif);font-size:34px;color:var(--brown);line-height:1">${priceLabel(p)}<span style="font-size:12px;color:var(--muted);margin-left:4px">${p.price ? '（税込）' : ''}</span></div>
-      ${p.note ? `<div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7">${p.note}</div>` : ''}
+      <div style="font-family:var(--font-serif);font-size:36px;color:var(--brown);line-height:1">${priceLabel(p)}<span style="font-size:14px;color:var(--muted);margin-left:4px">${p.price ? '（税込）' : ''}</span></div>
+      ${p.note ? `<div style="font-size:13px;color:var(--muted);margin-top:12px;line-height:1.7">${p.note}</div>` : ''}
     </div>`;
   document.getElementById('feeTitle').style.display = 'none';
   document.getElementById('feeTime').textContent = state.plan.time || state.activity.time;
