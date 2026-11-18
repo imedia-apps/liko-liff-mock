@@ -109,7 +109,8 @@
     try {
       var el = document.querySelector('.screen[data-scr="welcome"] .hdr .back');
       if (!el) return;
-      var fixed = qrStore() && currentCode() === qrStore() && history.length <= 1;
+      // 隠すのは「QRで確定した店舗の体験選択画面」にいる間だけ。QRの有効時間（4時間）が過ぎたら戻れる
+      var fixed = qrStore() && currentCode() === qrStore() && history[history.length - 1] === 'welcome';
       el.classList.toggle('hide', !!fixed);
     } catch (e) {}
   }
@@ -129,6 +130,8 @@
   function boot() {
     if (typeof STORES === 'undefined' || typeof state === 'undefined' || typeof go !== 'function') return;   // 本体が無ければ何もしない
     loadProfile();
+    // 途中再開のデータが店舗一覧から始まっていなければ、先頭に足す（店舗を選び直せない状態を防ぐ）
+    try { if (history.length && history[0] !== 'store') history.unshift('store'); } catch (e) {}
 
     // 画面遷移に合わせて記録を送る
     var _go = go;
@@ -156,13 +159,13 @@
         var resumedSame = state.store && state.store.name === target.name && history.length > 0 && history[history.length - 1] !== 'store';
         if (!resumedSame) {
           state.store = target; state.activity = null; state.plan = null; state.guideStep = 0; state.reviewed = false;
-          history = ['welcome'];
+          history = ['store', 'welcome'];   // 店舗一覧を履歴の先頭に残す（あとでQRなしで開き直したときに店舗を選び直せるように）
           onEnter('welcome'); show('welcome');
         }
         enterWhenReady(code);
-        fixBackButton();
       }
     }
+    fixBackButton();   // QRなしで開き直したときも、戻るボタンの表示を正しい状態にする
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
